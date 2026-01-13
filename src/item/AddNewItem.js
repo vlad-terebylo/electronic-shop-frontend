@@ -1,5 +1,7 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const AddNewItem = () => {
     const [title, setTitle] = useState('');
@@ -8,6 +10,8 @@ const AddNewItem = () => {
     const [manufacturer, setManufacturer] = useState('');
     const [quantity, setQuantity] = useState('');
     const [itemTypeId, setItemTypeId] = useState('');
+
+    const navigate = useNavigate();
 
     const handleAddItem = async () => {
         try {
@@ -78,6 +82,9 @@ const AddNewItem = () => {
             />
 
             <button onClick={handleAddItem}>Add new item</button>
+            <button onClick={() => navigate(-1)} style={{margin: '10px'}}>
+                ← To main page
+            </button>
         </div>
     );
 };

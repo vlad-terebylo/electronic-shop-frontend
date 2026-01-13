@@ -1,49 +1,51 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const ShowAllItems = () => {
-    const [data, setData] = useState(null);
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Отправка GET-запроса к вашему бэкенду
         axios.get('http://localhost:1409/shop/items')
             .then(response => {
-                console.log(response.data); // Посмотрите, что возвращает сервер
-                setData(response.data);
+                console.log('Server response:', response.data);
+                if (Array.isArray(response.data)) {
+                    setItems(response.data);
+                } else if (response.data.items) {
+                    setItems(response.data.items);
+                } else {
+                    setItems([]);
+                    console.warn('Data is not an array', response.data);
+                }
+                setLoading(false);
             })
-            .catch(error => {
-                console.error('Ошибка при получении данных:', error);
+            .catch(err => {
+                console.error('Error during getting data:', err);
+                setError('Failed to fetch items');
+                setLoading(false);
             });
-    }, []); // пустой массив зависимостей означает, что эффект выполнится только один раз при монтировании компонента
+    }, []);
+
+    if (loading) return <p>Loading items...</p>;
+    if (error) return <p>{error}</p>;
+    if (!items.length) return <p>No items found</p>;
 
     return (
         <div>
-            <h1>Data from server:</h1>
-            {/* Если данные загружены, отображаем их, иначе выводим сообщение о загрузке */}
-            {data ? (
-                <div>
-                    {data.map((item, index) => (
-                        <div key={index}>
-                            <h2>Item {index + 1}</h2>
-                            {displayData(item)} {/* Отображаем поля каждого объекта */}
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <p>Loading data...</p>  // Сообщение, если данные еще загружаются
-            )}
+            <h1>All Items</h1>
+            <ul>
+                {items.map(item => (
+                    <li key={item.id}>
+                        <Link to={`/item/${item.id}`} style={{ textDecoration: 'none', color: 'blue' }}>
+                            {item.name || item.title}
+                        </Link>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
-}
-
-function displayData(data) {
-    let output = '';
-    for (let key in data) {
-        output += `${key}: ${data[key]}\n`;
-    }
-
-    return output;
 };
-
 
 export default ShowAllItems;
