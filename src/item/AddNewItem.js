@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 
 const AddNewItem = () => {
@@ -11,7 +11,14 @@ const AddNewItem = () => {
     const [quantity, setQuantity] = useState('');
     const [itemTypeId, setItemTypeId] = useState('');
 
+    const [itemTypes, setItemTypes] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get('http://localhost:1409/shop/itemTypes')
+            .then(res => setItemTypes(res.data))
+            .catch(err => console.error('Error fetching item types:', err));
+    }, []);
 
     const handleAddItem = async () => {
         try {
@@ -23,8 +30,6 @@ const AddNewItem = () => {
                 quantity: parseInt(quantity),
                 itemTypeId: parseInt(itemTypeId)
             });
-
-            console.log('Item was added: ', response.data);
 
             setTitle('');
             setPrice('');
@@ -74,16 +79,16 @@ const AddNewItem = () => {
                 onChange={(e) => setQuantity(e.target.value)}
             />
 
-            <input
-                type="number"
-                placeholder="Item type id"
-                value={itemTypeId}
-                onChange={(e) => setItemTypeId(e.target.value)}
-            />
+            <select value={itemTypeId} onChange={e => setItemTypeId(e.target.value)}>
+                <option value="">Select Item Type</option>
+                {itemTypes.map(type => (
+                    <option key={type.id} value={type.id}>{type.title}</option>
+                ))}
+            </select>
 
             <button onClick={handleAddItem}>Add new item</button>
             <button onClick={() => navigate(-1)} style={{margin: '10px'}}>
-                ← To main page
+                ← Home
             </button>
         </div>
     );

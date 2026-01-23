@@ -7,17 +7,24 @@ const UpdateItem = () => {
     const navigate = useNavigate();
 
     const [item, setItem] = useState(null);
+    const [itemTypes, setItemTypes] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios.get(`http://localhost:1409/shop/items/${id}`)
             .then(res => {
-                console.log('GET response:', res.data);
                 setItem(res.data);
                 setLoading(false);
             })
             .catch(err => {
-                console.error('Error fetching item', err);
+                setLoading(false);
+            });
+        axios.get('http://localhost:1409/shop/itemTypes')
+            .then(res => {
+                setItemTypes(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
                 setLoading(false);
             });
     }, [id]);
@@ -57,9 +64,16 @@ const UpdateItem = () => {
                     onChange={e => setItem({...item, quantity: parseInt(e.target.value)})}
                     required
                 />
+                <select value={item.itemTypeId}
+                        onChange={e => setItem({...item, itemTypeId: parseInt(e.target.value)})}>
+                    <option value="">Select Item Type</option>
+                    {itemTypes.map(type => (
+                        <option key={type.id} value={type.id}>{type.title}</option>
+                    ))}
+                </select>
                 <button type="submit">Save Changes</button>
                 <button type="button" onClick={() => navigate(-1)} style={{marginLeft: '10px'}}>
-                    Cancel
+                    ← Home
                 </button>
             </form>
         </div>

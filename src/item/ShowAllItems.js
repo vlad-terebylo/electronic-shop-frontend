@@ -6,6 +6,7 @@ const ShowAllItems = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editingItem, setEditingItem] = useState(null);
+    const [id, setItemId] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,12 +25,12 @@ const ShowAllItems = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this item?");
-        if (!confirmDelete) return;
+    const handleDelete = async () => {
+        if (id == null) return;
 
         try {
             await axios.delete(`http://localhost:1409/shop/items/${id}`);
+            setItemId(null);
             fetchItems();
         } catch (err) {
             console.error('Error deleting item', err);
@@ -67,7 +68,7 @@ const ShowAllItems = () => {
                     <button onClick={() => navigate(`/update/${item.id}`)} style={{marginLeft: '5px'}}>
                         Update info
                     </button>
-                    <button onClick={() => handleDelete(item.id)} style={{marginLeft: '5px', color: 'red'}}>
+                    <button onClick={() => setItemId(item.id)} style={{marginLeft: '5px', color: 'red'}}>
                         Remove item
                     </button>
                 </div>
@@ -103,6 +104,30 @@ const ShowAllItems = () => {
                             Cancel
                         </button>
                     </form>
+                </div>
+            )}
+            {id && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <div style={{
+                        background: 'white',
+                        padding: '30px',
+                        borderRadius: '10px',
+                        textAlign: 'center'
+                    }}>
+                        <p>Are you sure you want to delete this item?</p>
+                        <button onClick={handleDelete} style={{marginRight: '10px', color: 'red'}}>Yes</button>
+                        <button onClick={() => setItemId(null)}>Cancel</button>
+                    </div>
                 </div>
             )}
         </div>
