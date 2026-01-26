@@ -9,6 +9,9 @@ const HomePage = () => {
             <Link to="/add_new_item">
                 <button style={{marginBottom: '20px'}}>Add new item</button>
             </Link>
+            <Link to="/add_new_item_type">
+                <button style={{marginBottom: '20px'}}>Add new item type</button>
+            </Link>
             <ShowAllItems/>
         </div>
     );

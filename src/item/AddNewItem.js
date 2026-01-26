@@ -22,7 +22,7 @@ const AddNewItem = () => {
 
     const handleAddItem = async () => {
         try {
-            const response = await axios.post('http://localhost:1409/shop/items', {
+            await axios.post('http://localhost:1409/shop/items', {
                 title: title,
                 price: parseInt(price),
                 producingYear: producingYear,
@@ -37,6 +37,7 @@ const AddNewItem = () => {
             setManufacturer('');
             setQuantity('');
             setItemTypeId('');
+            navigate('/')
         } catch (error
             ) {
             console.log("Error - ", error);
