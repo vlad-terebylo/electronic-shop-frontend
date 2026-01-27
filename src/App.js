@@ -4,8 +4,9 @@ import AddNewItem from './item/AddNewItem';
 import HomePage from "./item/HomePage";
 import ShowItemById from "./item/ShowItemById";
 import UpdateItem from "./item/UpdateItem";
-import AddNewItemType from "./item/AddNewItemType";
-import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
+import AddNewItemType from "./itemType/AddNewItemType";
+import ShowAllItemTypes from "./itemType/ShowAllItemTypes"
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 
 function App() {
@@ -15,10 +16,11 @@ function App() {
             <div>
                 <Routes>
                     <Route path="/" element={<HomePage/>}/>
-                    <Route path="/item/:id" element={<ShowItemById/>}/>
-                    <Route path={"/add_new_item"} element={<AddNewItem/>}/>
-                    <Route path={"/add_new_item_type"} element={<AddNewItemType/>}/>
-                    <Route path="/update/:id" element={<UpdateItem/>}/>
+                    <Route path="/items/:id" element={<ShowItemById/>}/>
+                    <Route path={"/items/add"} element={<AddNewItem/>}/>
+                    <Route path={"/item-types/add"} element={<AddNewItemType/>}/>
+                    <Route path="/items/update/:id" element={<UpdateItem/>}/>
+                    <Route path="/item-types" element={<ShowAllItemTypes/>}/>
                 </Routes>
             </div>
         </Router>

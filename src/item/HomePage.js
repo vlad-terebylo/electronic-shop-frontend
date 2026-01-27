@@ -6,11 +6,11 @@ const HomePage = () => {
     return (
         <div>
             <h1>Main admin page</h1>
-            <Link to="/add_new_item">
+            <Link to="/items/add">
                 <button style={{marginBottom: '20px'}}>Add new item</button>
             </Link>
-            <Link to="/add_new_item_type">
-                <button style={{marginBottom: '20px'}}>Add new item type</button>
+            <Link to="/item-types">
+                <button style={{marginBottom: '20px'}}>Show all item types</button>
             </Link>
             <ShowAllItems/>
         </div>

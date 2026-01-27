@@ -62,10 +62,10 @@ const ShowAllItems = () => {
                     <p>Quantity: {item.quantity}</p>
                     <p>Manufacturer: {item.manufacturer}</p>
 
-                    <Link to={`/item/${item.id}`}>
+                    <Link to={`/items/${item.id}`}>
                         <button>View details</button>
                     </Link>
-                    <button onClick={() => navigate(`/update/${item.id}`)} style={{marginLeft: '5px'}}>
+                    <button onClick={() => navigate(`/items/update/${item.id}`)} style={{marginLeft: '5px'}}>
                         Update info
                     </button>
                     <button onClick={() => setItemId(item.id)} style={{marginLeft: '5px', color: 'red'}}>
