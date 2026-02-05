@@ -74,38 +74,39 @@ const ShowAllItems = () => {
                 </div>
             ))}
 
-            {editingItem && (
-                <div style={{border: '2px solid blue', padding: '15px', marginTop: '20px'}}>
-                    <h2>Update Item: {editingItem.title || editingItem.name}</h2>
-                    <form onSubmit={handleUpdateSubmit}>
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            value={editingItem.title}
-                            onChange={(e) => setEditingItem({...editingItem, title: e.target.value})}
-                            required
-                        />
-                        <input
-                            type="number"
-                            placeholder="Price"
-                            value={editingItem.price}
-                            onChange={(e) => setEditingItem({...editingItem, price: parseInt(e.target.value)})}
-                            required
-                        />
-                        <input
-                            type="number"
-                            placeholder="Quantity"
-                            value={editingItem.quantity}
-                            onChange={(e) => setEditingItem({...editingItem, quantity: parseInt(e.target.value)})}
-                            required
-                        />
-                        <button type="submit">Save Changes</button>
-                        <button type="button" onClick={() => setEditingItem(null)} style={{marginLeft: '10px'}}>
-                            Cancel
-                        </button>
-                    </form>
-                </div>
-            )}
+            {/*{editingItem && (*/}
+            {/*    <div style={{border: '2px solid blue', padding: '15px', marginTop: '20px'}}>*/}
+            {/*        <h2>Update Item: {editingItem.title || editingItem.name}</h2>*/}
+            {/*        <form onSubmit={handleUpdateSubmit}>*/}
+            {/*            <input*/}
+            {/*                type="text"*/}
+            {/*                placeholder="Title"*/}
+            {/*                value={editingItem.title}*/}
+            {/*                onChange={(e) => setEditingItem({...editingItem, title: e.target.value})}*/}
+            {/*                required*/}
+            {/*            />*/}
+            {/*            <input*/}
+            {/*                type="number"*/}
+            {/*                placeholder="Price"*/}
+            {/*                value={editingItem.price}*/}
+            {/*                onChange={(e) => setEditingItem({...editingItem, price: parseInt(e.target.value)})}*/}
+            {/*                required*/}
+            {/*            />*/}
+            {/*            <input*/}
+            {/*                type="number"*/}
+            {/*                placeholder="Quantity"*/}
+            {/*                value={editingItem.quantity}*/}
+            {/*                onChange={(e) => setEditingItem({...editingItem, quantity: parseInt(e.target.value)})}*/}
+            {/*                required*/}
+            {/*            />*/}
+            {/*            <button type="submit">Save Changes</button>*/}
+            {/*            <button type="button" onClick={() => setEditingItem(null)} style={{marginLeft: '10px'}}>*/}
+            {/*                Cancel*/}
+            {/*            </button>*/}
+            {/*        </form>*/}
+            {/*    </div>*/}
+            {/*)}*/}
+
             {id && (
                 <div style={{
                     position: 'fixed',

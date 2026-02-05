@@ -7,6 +7,7 @@ import UpdateItem from "./item/UpdateItem";
 import AddNewItemType from "./itemType/AddNewItemType";
 import ShowAllItemTypes from "./itemType/ShowAllItemTypes"
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import UpdateItemType from "./itemType/UpdateItemType";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
                     <Route path={"/items/add"} element={<AddNewItem/>}/>
                     <Route path={"/item-types/add"} element={<AddNewItemType/>}/>
                     <Route path="/items/update/:id" element={<UpdateItem/>}/>
+                    <Route path="/itemTypes/update/:id" element={<UpdateItemType/>}/>
                     <Route path="/item-types" element={<ShowAllItemTypes/>}/>
                 </Routes>
             </div>
