@@ -1,6 +1,7 @@
 import React from 'react';
 import ShowAllItems from './ShowAllItems';
 import {Link} from "react-router-dom";
+import ItemSearchById from "./SearchItemById";
 
 const HomePage = () => {
     return (
@@ -12,6 +13,10 @@ const HomePage = () => {
             <Link to="/item-types">
                 <button style={{marginBottom: '20px'}}>Show all item types</button>
             </Link>
+            <Link to="/purchases">
+                <button style={{marginBottom: '20px'}}>Show all customers' purchases</button>
+            </Link>
+            <ItemSearchById/>
             <ShowAllItems/>
         </div>
     );

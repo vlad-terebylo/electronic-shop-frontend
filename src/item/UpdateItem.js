@@ -47,9 +47,10 @@ const UpdateItem = () => {
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
+
         if (!validate()) return;
 
-        e.preventDefault();
         try {
             await axios.put(`http://localhost:1409/shop/items/${id}`, item);
             navigate('/');

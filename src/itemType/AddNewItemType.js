@@ -46,7 +46,7 @@ const AddNewItemType = () => {
                 <button onClick={handleAddItemType} style={{marginRight: '10px'}}>
                     Add Type
                 </button>
-                <button onClick={() => navigate(-2)}>
+                <button onClick={() => navigate(-1)}>
                     ← Home
                 </button>
             </div>

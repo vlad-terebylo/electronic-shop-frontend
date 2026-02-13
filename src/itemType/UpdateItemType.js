@@ -33,8 +33,9 @@ const UpdateItemType = () => {
     };
 
     const handleSubmit = async (e) => {
-        if (!validate()) return;
         e.preventDefault();
+
+        if (!validate()) return;
 
         try {
             await axios.patch(`http://localhost:1409/shop/itemTypes/${id}`, {title});
