@@ -15,7 +15,7 @@ const ShowAllItems = () => {
 
     const fetchItems = async () => {
         try {
-            const res = await axios.get('http://localhost:1409/shop/items');
+            const res = await axios.get('http://localhost:1409/api/items');
             const data = Array.isArray(res.data) ? res.data : res.data.items;
             setItems(data || []);
             console.log(res.data);
@@ -30,7 +30,7 @@ const ShowAllItems = () => {
         if (id == null) return;
 
         try {
-            await axios.delete(`http://localhost:1409/shop/items/${id}`);
+            await axios.delete(`http://localhost:1409/api/items/${id}`);
             setItemId(null);
             fetchItems();
         } catch (err) {
@@ -41,7 +41,7 @@ const ShowAllItems = () => {
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:1409/shop/items/${editingItem.id}`, editingItem);
+            await axios.put(`http://localhost:1409/api/items/${editingItem.id}`, editingItem);
             setEditingItem(null);
             fetchItems();
         } catch (err) {

@@ -21,7 +21,7 @@ const ItemSearchById = () => {
         setError(null);
 
         try {
-            await axios.get(`http://localhost:1409/shop/items/${itemId}`);
+            await axios.get(`http://localhost:1409/api/items/${itemId}`);
             navigate(`/items/${itemId}`);
         } catch (err) {
             setError("Item with this ID was not found");

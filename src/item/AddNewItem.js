@@ -16,7 +16,7 @@ const AddNewItem = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:1409/shop/itemTypes')
+        axios.get('http://localhost:1409/api/itemTypes')
             .then(res => setItemTypes(res.data))
             .catch(err => console.error('Error fetching item types:', err));
     }, []);
@@ -40,7 +40,7 @@ const AddNewItem = () => {
         if (!validate()) return;
 
         try {
-            await axios.post('http://localhost:1409/shop/items', {
+            await axios.post('http://localhost:1409/api/items', {
                 title: title.trim(),
                 price: parseInt(price),
                 producingYear: producingYear,

@@ -11,7 +11,7 @@ const UpdateItemType = () => {
     const [errors, setErrors] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:1409/shop/itemTypes/${id}`)
+        axios.get(`http://localhost:1409/api/itemTypes/${id}`)
             .then(res => {
                 setItemTypeItem(res.data.title);
                 setLoading(false);
@@ -38,7 +38,7 @@ const UpdateItemType = () => {
         if (!validate()) return;
 
         try {
-            await axios.patch(`http://localhost:1409/shop/itemTypes/${id}`, {title});
+            await axios.patch(`http://localhost:1409/api/itemTypes/${id}`, {title});
             navigate('/item-types');
         } catch (err) {
             console.error('Error updating item type', err);

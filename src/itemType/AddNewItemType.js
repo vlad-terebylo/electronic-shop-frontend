@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import '../App.css';
 
 const AddNewItemType = () => {
     const [title, setTitle] = useState('');
@@ -21,7 +22,7 @@ const AddNewItemType = () => {
         if (!validate()) return;
         if (!title.trim()) return;
         try {
-            await axios.post('http://localhost:1409/shop/itemTypes', {title});
+            await axios.post('http://localhost:1409/api/itemTypes', {title});
             console.log('ItemType added:', title);
             setTitle('');
             navigate('/');

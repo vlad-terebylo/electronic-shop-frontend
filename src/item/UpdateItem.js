@@ -12,7 +12,7 @@ const UpdateItem = () => {
     const [errors, setErrors] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:1409/shop/items/${id}`)
+        axios.get(`http://localhost:1409/api/items/${id}`)
             .then(res => {
                 setItem(res.data);
                 setLoading(false);
@@ -20,7 +20,7 @@ const UpdateItem = () => {
             .catch(err => {
                 setLoading(false);
             });
-        axios.get('http://localhost:1409/shop/itemTypes')
+        axios.get('http://localhost:1409/api/itemTypes')
             .then(res => {
                 setItemTypes(res.data);
                 setLoading(false);
@@ -52,7 +52,7 @@ const UpdateItem = () => {
         if (!validate()) return;
 
         try {
-            await axios.put(`http://localhost:1409/shop/items/${id}`, item);
+            await axios.put(`http://localhost:1409/api/items/${id}`, item);
             navigate('/');
         } catch (err) {
             console.error('Error updating item', err);

@@ -20,11 +20,11 @@ const ShowItemById = () => {
     useEffect(() => {
         const fetchItem = async () => {
             try {
-                const item = await axios.get(`http://localhost:1409/shop/items/${id}`);
+                const item = await axios.get(`http://localhost:1409/api/items/${id}`);
                 const data = item.data;
                 setItem(item.data);
 
-                const itemType = await axios.get(`http://localhost:1409/shop/itemTypes/${data.itemTypeId}`);
+                const itemType = await axios.get(`http://localhost:1409/api/itemTypes/${data.itemTypeId}`);
                 setItemTypeTitle(itemType.data.title);
 
                 setLoading(false);

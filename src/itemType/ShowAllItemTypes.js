@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link, useNavigate} from 'react-router-dom';
+import '../App.css';
 
 const ShowAllItemTypes = () => {
     const [itemTypes, setItemType] = useState([]);
@@ -15,7 +16,7 @@ const ShowAllItemTypes = () => {
 
     const fetchItemTypes = async () => {
         try {
-            const itemTypeList = await axios.get('http://localhost:1409/shop/itemTypes');
+            const itemTypeList = await axios.get('http://localhost:1409/api/itemTypes');
             const data = Array.isArray(itemTypeList.data) ? itemTypeList.data : itemTypeList.data.itemType;
             setItemType(data || []);
             setLoading(false);
@@ -29,22 +30,11 @@ const ShowAllItemTypes = () => {
         if (id == null) return;
 
         try {
-            await axios.delete(`http://localhost:1409/shop/itemTypes/${id}`);
+            await axios.delete(`http://localhost:1409/api/itemTypes/${id}`);
             setItemIdForDelete(null);
             fetchItemTypes();
         } catch (err) {
             console.error('Error deleting item', err);
-        }
-    };
-
-    const handleUpdateAndSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.put(`http://localhost:1409/shop/itemTypes/${editingItem.id}`, editingItem);
-            setEditingItem(null);
-            fetchItemTypes();
-        } catch (err) {
-            console.error('Error updating item', err);
         }
     };
 
@@ -53,14 +43,16 @@ const ShowAllItemTypes = () => {
     if (!itemTypes.length) return <p>No items found</p>;
 
     return (
-        <div>
+        <div className="container">
             <h1>All item types</h1>
-            <Link to="/item-types/add">
-                <button style={{marginBottom: '20px'}}>Add New Item Type</button>
-            </Link>
-            <Link to="/">
-                <button style={{marginBottom: '20px'}}>← Back to main page</button>
-            </Link>
+            <div className="button-group">
+                <Link to="/item-types/add">
+                    <button style={{marginBottom: '20px'}}>Add New Item Type</button>
+                </Link>
+                <Link to="/">
+                    <button style={{marginBottom: '20px'}}>← Back to main page</button>
+                </Link>
+            </div>
 
             {itemTypes.map(itemType => (
                 <div key={itemType.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
