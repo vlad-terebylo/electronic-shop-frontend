@@ -1,7 +1,6 @@
 import React from 'react';
 import ShowAllItems from './ShowAllItems';
 import { Link } from "react-router-dom";
-import ItemSearchById from "./SearchItemById";
 
 const HomePage = () => {
     return (
@@ -19,8 +18,6 @@ const HomePage = () => {
                     <button>Show all customers' purchases</button>
                 </Link>
             </div>
-
-            <ItemSearchById />
 
             <ShowAllItems />
         </div>

@@ -42,7 +42,7 @@ const ShowItemById = () => {
     if (error) return <p>{error}</p>;
     if (!item) return <p>The object was not found</p>;
     return (
-        <div>
+        <div className="container">
             <h1>Item Details</h1>
             <ul>
                 <li><strong>Title:</strong> {item.title}</li>
@@ -52,7 +52,7 @@ const ShowItemById = () => {
                 <li><strong>Manufacturer:</strong> {item.manufacturer}</li>
                 <li><strong>Type:</strong> {itemTypeTitle}</li>
             </ul>
-            <button onClick={() => navigate(-1)} style={{margin: '10px'}}>
+            <button onClick={() => navigate(-1)} className="button-group">
                 ← Home
             </button>
         </div>

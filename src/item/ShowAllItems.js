@@ -1,9 +1,11 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link, useNavigate} from 'react-router-dom';
+import SearchItemById from "./SearchItemById";
 
 const ShowAllItems = () => {
     const [items, setItems] = useState([]);
+    const [filteredItems, setFilteredItems] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editingItem, setEditingItem] = useState(null);
     const [id, setItemId] = useState(null);
@@ -24,6 +26,16 @@ const ShowAllItems = () => {
             console.error('Error fetching items', err);
             setLoading(false);
         }
+    };
+
+    const handleSearch = (id) => {
+        if (!id) {
+            setFilteredItems(items);
+            return;
+        }
+
+        const filtered = items.filter(item => item.id === id);
+        setFilteredItems(filtered);
     };
 
     const handleDelete = async () => {
@@ -56,7 +68,9 @@ const ShowAllItems = () => {
         <div>
             <h1>All Items</h1>
 
-            {items.map(item => (
+            <SearchItemById onSearch={handleSearch}/>
+
+            {(filteredItems || items).map(item => (
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{item.title || item.name}</h3>
                     <p>Price: {item.price}</p>
@@ -74,6 +88,12 @@ const ShowAllItems = () => {
                     </button>
                 </div>
             ))}
+
+            {filteredItems && (
+                <button onClick={() => setFilteredItems(null)} style={{marginBottom: "15px"}}>
+                    Show All Items
+                </button>
+            )}
 
             {editingItem && (
                 <div style={{border: '2px solid blue', padding: '15px', marginTop: '20px'}}>
