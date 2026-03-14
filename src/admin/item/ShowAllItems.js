@@ -1,7 +1,9 @@
 import {useState, useEffect} from 'react';
-import axios from 'axios';
 import {Link, useNavigate} from 'react-router-dom';
 import SearchItemById from "./SearchItemById";
+import SearchItemByTitle from "../../core/SearchItemByTitle";
+import apiClient from '../../core/ApiClient';
+
 
 const ShowAllItems = () => {
     const [items, setItems] = useState([]);
@@ -10,6 +12,7 @@ const ShowAllItems = () => {
     const [editingItem, setEditingItem] = useState(null);
     const [id, setItemId] = useState(null);
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetchItems();
@@ -17,18 +20,29 @@ const ShowAllItems = () => {
 
     const fetchItems = async () => {
         try {
-            const res = await axios.get('http://localhost:1409/api/items');
+            const res = await apiClient.get('http://localhost:1409/api/items');
             const data = Array.isArray(res.data) ? res.data : res.data.items;
             setItems(data || []);
             console.log(res.data);
             setLoading(false);
         } catch (err) {
             console.error('Error fetching items', err);
+            setError("Failed to load items");
             setLoading(false);
         }
     };
 
-    const handleSearch = (id) => {
+    const handleSearchByTitle = (title) => {
+        if (!title) {
+            setFilteredItems(items);
+            return;
+        }
+
+        const filtered = items.filter(item => item.title.toLowerCase().includes(title.toLowerCase()));
+        setFilteredItems(filtered);
+    };
+
+    const handleSearchById = (id) => {
         if (!id) {
             setFilteredItems(items);
             return;
@@ -42,7 +56,7 @@ const ShowAllItems = () => {
         if (id == null) return;
 
         try {
-            await axios.delete(`http://localhost:1409/api/items/${id}`);
+            await apiClient.delete(`http://localhost:1409/api/items/${id}`);
             setItemId(null);
             fetchItems();
         } catch (err) {
@@ -53,7 +67,7 @@ const ShowAllItems = () => {
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:1409/api/items/${editingItem.id}`, editingItem);
+            await apiClient.put(`http://localhost:1409/api/items/${editingItem.id}`, editingItem);
             setEditingItem(null);
             fetchItems();
         } catch (err) {
@@ -62,28 +76,30 @@ const ShowAllItems = () => {
     };
 
     if (loading) return <p>Loading items...</p>;
-    if (!items.length) return <p>No items found</p>;
+    if (error) return <p style={{color: "red"}}>{error}</p>;
 
     return (
         <div>
             <h1>All Items</h1>
 
-            <SearchItemById onSearch={handleSearch}/>
+            <SearchItemById onSearch={handleSearchById}/>
+            <SearchItemByTitle onSearch={handleSearchByTitle}/>
 
             {(filteredItems || items).map(item => (
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{item.title || item.name}</h3>
+                    <p>Id: {item.id}</p>
                     <p>Price: {item.price}</p>
                     <p>Quantity: {item.quantity}</p>
                     <p>Manufacturer: {item.manufacturer}</p>
 
-                    <Link to={`/items/${item.id}`}>
+                    <Link to={`/admin/items/${item.id}`}>
                         <button>View details</button>
                     </Link>
-                    <button onClick={() => navigate(`/items/update/${item.id}`)} style={{marginLeft: '5px'}}>
+                    <button onClick={() => navigate(`/admin/items/update/${item.id}`)} style={{marginLeft: '5px'}}>
                         Update info
                     </button>
-                    <button onClick={() => setItemId(item.id)} style={{marginLeft: '5px', color: 'red'}}>
+                    <button onClick={() => setItemId(item.id)} style={{marginLeft: '5px'}}>
                         Remove item
                     </button>
                 </div>
@@ -147,7 +163,7 @@ const ShowAllItems = () => {
                         textAlign: 'center'
                     }}>
                         <p>Are you sure you want to delete this item?</p>
-                        <button onClick={handleDelete} style={{marginRight: '10px', color: 'red'}}>Yes</button>
+                        <button onClick={handleDelete} style={{marginRight: '10px'}}>Yes</button>
                         <button onClick={() => setItemId(null)}>Cancel</button>
                     </div>
                 </div>

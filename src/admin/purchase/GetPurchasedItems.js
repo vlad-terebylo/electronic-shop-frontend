@@ -1,9 +1,10 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const PurchasesPage = () => {
     const [purchases, setPurchases] = useState([]);
+    const [itemsMap, setItemsMap] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -15,6 +16,14 @@ const PurchasesPage = () => {
     const fetchPurchases = async () => {
         try {
             const res = await axios.get("http://localhost:1409/api/purchase");
+            const itemsRes = await axios.get("http://localhost:1409/api/items");
+
+            const map = {};
+            itemsRes.data.forEach(item => {
+                map[item.id] = item.title;
+            });
+
+            setItemsMap(map);
             setPurchases(res.data || []);
             setLoading(false);
         } catch (err) {
@@ -26,17 +35,25 @@ const PurchasesPage = () => {
 
     if (loading) return <p>Loading purchases...</p>;
     if (error) return <p style={{color: "red"}}>{error}</p>;
-    if (!purchases.length) return <p>No purchases yet.</p>;
 
     return (
-        <div>
-            <h1>All Items</h1>
+        <div className="container">
+            <h1>All purchases</h1>
 
             {purchases.map(purchase => (
                 <div key={purchase.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
-                    <h3>{purchase.email}</h3>
-                    <p>Price: {purchase.cardNumber}</p>
-                    <p>Quantity: {purchase.itemIds}</p>
+                    <ul>
+                        <li><strong>Customer email:</strong> {purchase.email}</li>
+                        <li><strong>Purchase price:</strong> {purchase.totalPrice}</li>
+                        <li><strong>Items:</strong></li>
+                        {purchase.purchaseItems.map((item, index) => (
+                            <div key={index} style={{margin: "20px"}}>
+                                <li><strong>Item ID:</strong> {item.itemId}</li>
+                                <li><strong>Item:</strong> {itemsMap[item.itemId] || `Item #${item.itemId}`}</li>
+                                <li><strong>Quantity:</strong> {item.quantity}</li>
+                            </div>
+                        ))}
+                    </ul>
                 </div>
             ))}
             <button onClick={() => navigate(-1)} style={{margin: '10px'}}>

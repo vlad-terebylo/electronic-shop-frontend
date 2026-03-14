@@ -1,12 +1,11 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link, useNavigate} from 'react-router-dom';
-import '../App.css';
+import '../../App.css';
 
 const ShowAllItemTypes = () => {
     const [itemTypes, setItemType] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [editingItem, setEditingItem] = useState(null);
     const [id, setItemIdForDelete] = useState(null);
     const navigate = useNavigate();
 
@@ -46,22 +45,23 @@ const ShowAllItemTypes = () => {
         <div className="container">
             <h1>All item types</h1>
             <div className="button-group">
-                <Link to="/item-types/add">
+                <Link to="/admin/item-types/add">
                     <button style={{marginBottom: '20px'}}>Add New Item Type</button>
                 </Link>
-                <Link to="/">
+                <Link to="/admin">
                     <button style={{marginBottom: '20px'}}>← Back to main page</button>
                 </Link>
             </div>
 
             {itemTypes.map(itemType => (
                 <div key={itemType.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
-                    <h2>{itemType.title}</h2>
-                    <button onClick={() => navigate(`/itemTypes/update/${itemType.id}`)} style={{marginRight: '10px'}}>
+                    <h3>{itemType.title}</h3>
+                    <button onClick={() => navigate(`/admin/itemTypes/update/${itemType.id}`)}
+                            style={{marginRight: '10px'}}>
                         Update
                     </button>
 
-                    <button onClick={() => setItemIdForDelete(itemType.id)} style={{color: 'red'}}>
+                    <button onClick={() => setItemIdForDelete(itemType.id)}>
                         Remove
                     </button>
                 </div>
@@ -86,7 +86,7 @@ const ShowAllItemTypes = () => {
                         textAlign: 'center'
                     }}>
                         <p>Are you sure you want to delete this item?</p>
-                        <button onClick={handleDelete} style={{marginRight: '10px', color: 'red'}}>Yes</button>
+                        <button onClick={handleDelete} style={{marginRight: '10px'}}>Yes</button>
                         <button onClick={() => setItemIdForDelete(null)}>Cancel</button>
                     </div>
                 </div>

@@ -39,7 +39,7 @@ const UpdateItemType = () => {
 
         try {
             await axios.patch(`http://localhost:1409/api/itemTypes/${id}`, {title});
-            navigate('/item-types');
+            navigate('/admin/item-types');
         } catch (err) {
             console.error('Error updating item type', err);
             alert('Failed to save changes');
@@ -49,7 +49,7 @@ const UpdateItemType = () => {
     if (loading) return <p>Loading item type...</p>;
 
     return (
-        <div>
+        <div className="container">
             <h2>Update Item Type: {title}</h2>
             <form onSubmit={handleSubmit}>
                 <input

@@ -53,7 +53,7 @@ const UpdateItem = () => {
 
         try {
             await axios.put(`http://localhost:1409/api/items/${id}`, item);
-            navigate('/');
+            navigate('/admin');
         } catch (err) {
             console.error('Error updating item', err);
             alert('Failed to save changes')
@@ -64,7 +64,7 @@ const UpdateItem = () => {
     if (!item) return <p>Item not found</p>;
 
     return (
-        <div>
+        <div className="container">
             <h2>Update Item: {item.title}</h2>
             <form onSubmit={handleSubmit}>
                 <input
@@ -73,6 +73,7 @@ const UpdateItem = () => {
                     onChange={e => setItem({...item, title: e.target.value})}
                 />
                 {errors.title && <p style={{color: 'red'}}>{errors.title}</p>}
+                <p></p>
 
                 <input
                     type="number"
@@ -80,6 +81,7 @@ const UpdateItem = () => {
                     onChange={e => setItem({...item, price: parseInt(e.target.value)})}
                 />
                 {errors.price && <p style={{color: 'red'}}>{errors.price}</p>}
+                <p></p>
 
                 <input
                     type="number"
@@ -87,6 +89,7 @@ const UpdateItem = () => {
                     onChange={e => setItem({...item, quantity: parseInt(e.target.value)})}
                 />
                 {errors.quantity && <p style={{color: 'red'}}>{errors.quantity}</p>}
+                <p></p>
 
                 <select value={item.itemTypeId}
                         onChange={e => setItem({...item, itemTypeId: parseInt(e.target.value)})}>
@@ -96,6 +99,7 @@ const UpdateItem = () => {
                     ))}
                 </select>
                 {errors.itemTypeId && <p style={{color: 'red'}}>{errors.itemTypeId}</p>}
+                <p></p>
 
                 <button type="submit">Save Changes</button>
                 <button type="button" onClick={() => navigate(-1)} style={{marginLeft: '10px'}}>

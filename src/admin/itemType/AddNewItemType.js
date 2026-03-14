@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
-import '../App.css';
+import '../../App.css';
 
 const AddNewItemType = () => {
     const [title, setTitle] = useState('');
@@ -25,14 +25,14 @@ const AddNewItemType = () => {
             await axios.post('http://localhost:1409/api/itemTypes', {title});
             console.log('ItemType added:', title);
             setTitle('');
-            navigate('/');
+            navigate('/admin/item-types');
         } catch (err) {
             console.error('Error adding item type:', err);
         }
     };
 
     return (
-        <div>
+        <div className="container">
             <h2>Add New Item Type</h2>
             <input
                 type="text"

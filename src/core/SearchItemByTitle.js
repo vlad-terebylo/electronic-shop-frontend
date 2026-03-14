@@ -1,22 +1,22 @@
 import {useState} from "react";
 
-const ItemSearchById = ({onSearch}) => {
-    const [itemId, setItemId] = useState("");
+const SearchItemByTitle = ({onSearch}) => {
+    const [itemTitle, setItemTitle] = useState("");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleSearch = (e) => {
         e.preventDefault();
 
-        if (!itemId || isNaN(itemId)) {
-            setError("Please enter a valid item ID");
+        if (!itemTitle) {
+            setError("Please enter a valid item title");
             return;
         }
 
         setLoading(true);
         setError(null);
 
-        onSearch(Number(itemId));
+        onSearch(itemTitle);
 
         setLoading(false);
     };
@@ -25,10 +25,10 @@ const ItemSearchById = ({onSearch}) => {
         <div style={{marginBottom: "20px"}}>
             <form onSubmit={handleSearch}>
                 <input
-                    type="number"
-                    placeholder="Search item by ID"
-                    value={itemId}
-                    onChange={(e) => setItemId(e.target.value)}
+                    type="text"
+                    placeholder="Search item by title"
+                    value={itemTitle}
+                    onChange={(e) => setItemTitle(e.target.value)}
                     style={{marginRight: "10px"}}
                 />
                 <button type="submit" disabled={loading}>
@@ -41,4 +41,4 @@ const ItemSearchById = ({onSearch}) => {
     );
 };
 
-export default ItemSearchById;
+export default SearchItemByTitle;

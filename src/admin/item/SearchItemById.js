@@ -1,6 +1,7 @@
 import {useState} from "react";
 
-const SearchItemByTitle = ({onSearch}) => {
+
+const ItemSearchById = ({onSearch}) => {
     const [itemId, setItemId] = useState("");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -41,4 +42,4 @@ const SearchItemByTitle = ({onSearch}) => {
     );
 };
 
-export default SearchItemByTitle;
+export default ItemSearchById;

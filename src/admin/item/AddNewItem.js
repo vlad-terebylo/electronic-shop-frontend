@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
-import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import apiClient from '../../core/ApiClient';
 
 
 const AddNewItem = () => {
@@ -16,7 +16,7 @@ const AddNewItem = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:1409/api/itemTypes')
+        apiClient.get('http://localhost:1409/api/itemTypes')
             .then(res => setItemTypes(res.data))
             .catch(err => console.error('Error fetching item types:', err));
     }, []);
@@ -40,7 +40,7 @@ const AddNewItem = () => {
         if (!validate()) return;
 
         try {
-            await axios.post('http://localhost:1409/api/items', {
+            await apiClient.post('http://localhost:1409/api/items', {
                 title: title.trim(),
                 price: parseInt(price),
                 producingYear: producingYear,
@@ -55,7 +55,7 @@ const AddNewItem = () => {
             setManufacturer('');
             setQuantity('');
             setItemTypeId('');
-            navigate('/')
+            navigate('/admin')
         } catch (error
             ) {
             console.log("Error - ", error);
@@ -64,7 +64,7 @@ const AddNewItem = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <h2>Add item</h2>
             <input
                 type="text"
@@ -73,6 +73,7 @@ const AddNewItem = () => {
                 onChange={(e) => setTitle(e.target.value)}
             />
             {errors.title && <p style={{color: 'red'}}>{errors.title}</p>}
+            <p></p>
 
             <input
                 type="number"
@@ -81,6 +82,7 @@ const AddNewItem = () => {
                 onChange={(e) => setPrice(e.target.value)}
             />
             {errors.price && <p style={{color: 'red'}}>{errors.price}</p>}
+            <p></p>
 
             <input
                 type="datetime-local"
@@ -89,6 +91,7 @@ const AddNewItem = () => {
                 onChange={(e) => setProducingYear(e.target.value)}
             />
             {errors.producingYear && <p style={{color: 'red'}}>{errors.producingYear}</p>}
+            <p></p>
 
             <input
                 type="text"
@@ -97,6 +100,7 @@ const AddNewItem = () => {
                 onChange={(e) => setManufacturer(e.target.value)}
             />
             {errors.manufacturer && <p style={{color: 'red'}}>{errors.manufacturer}</p>}
+            <p></p>
 
             <input
                 type="number"
@@ -105,6 +109,7 @@ const AddNewItem = () => {
                 onChange={(e) => setQuantity(e.target.value)}
             />
             {errors.quantity && <p style={{color: 'red'}}>{errors.quantity}</p>}
+            <p></p>
 
             <select value={itemTypeId} onChange={e => setItemTypeId(e.target.value)}>
                 <option value="">Select Item Type</option>
@@ -113,6 +118,7 @@ const AddNewItem = () => {
                 ))}
             </select>
             {errors.itemTypeId && <p style={{color: 'red'}}>{errors.itemTypeId}</p>}
+            <p></p>
 
             <button onClick={handleAddItem}>Add new item</button>
             <button onClick={() => navigate(-1)} style={{margin: '10px'}}>

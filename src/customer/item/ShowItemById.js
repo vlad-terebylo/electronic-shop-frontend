@@ -1,9 +1,12 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
 import {useParams, useNavigate} from 'react-router-dom';
+import {addToCart} from "../cart/CartService";
+import CartPopup from "../cart/CartPopup";
+import AddToCartPopup from "../cart/AddToCartPopup";
 
 
-const ShowItemById = () => {
+const ShowItemByIdU = () => {
     const {id} = useParams();
     const navigate = useNavigate();
 
@@ -11,6 +14,8 @@ const ShowItemById = () => {
     const [itemTypeTitle, setItemTypeTitle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [popupItem, setPopupItem] = useState(null);
+    const [popupMessage, setPopupMessage] = useState(null);
 
 
     const formatDate = (producingYear) => {
@@ -38,9 +43,20 @@ const ShowItemById = () => {
         fetchItem();
     }, [id]);
 
+    const handleAddClick = (item) => {
+        setPopupItem(item);
+    };
+
+    const handleAddToCart = (item, quantity) => {
+        const result = addToCart(item, quantity);
+        if (result === false) alert(`Updated quantity for ${item.title} in cart`);
+        else if (result === "exceed") alert(`Cannot add more than ${item.quantity} items`);
+    };
+
+    const closePopup = () => setPopupMessage(null);
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
-    if (!item) return <p>The object was not found</p>;
     return (
         <div className="container">
             <h1>Item Details</h1>
@@ -55,8 +71,21 @@ const ShowItemById = () => {
             <button onClick={() => navigate(-1)} className="button-group">
                 ← Home
             </button>
+            <button onClick={() => handleAddClick(item)} className="button-group">
+                Add to cart
+            </button>
+
+            {popupItem && (
+                <AddToCartPopup
+                    item={popupItem}
+                    onClose={() => setPopupItem(null)}
+                    onAdd={handleAddToCart}
+                />
+            )}
+
+            {popupMessage && <CartPopup message={popupMessage} onClose={closePopup}/>}
         </div>
     );
 };
 
-export default ShowItemById;
+export default ShowItemByIdU;
