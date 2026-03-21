@@ -102,7 +102,7 @@ input:focus, select:focus {
 .button-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* расстояние между кнопками */
+  gap: 10px;
   margin-bottom: 20px;
 }
 

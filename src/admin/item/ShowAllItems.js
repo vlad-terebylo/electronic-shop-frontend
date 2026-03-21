@@ -3,6 +3,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import SearchItemById from "./SearchItemById";
 import SearchItemByTitle from "../../core/SearchItemByTitle";
 import apiClient from '../../core/ApiClient';
+import {useTranslation} from "react-i18next";
 
 
 const ShowAllItems = () => {
@@ -13,6 +14,7 @@ const ShowAllItems = () => {
     const [id, setItemId] = useState(null);
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const {t} = useTranslation();
 
     useEffect(() => {
         fetchItems();
@@ -20,14 +22,14 @@ const ShowAllItems = () => {
 
     const fetchItems = async () => {
         try {
-            const res = await apiClient.get('http://localhost:1409/api/items');
+            const res = await apiClient.get('/items');
             const data = Array.isArray(res.data) ? res.data : res.data.items;
             setItems(data || []);
             console.log(res.data);
             setLoading(false);
         } catch (err) {
-            console.error('Error fetching items', err);
-            setError("Failed to load items");
+            console.error(t("error_fetching_item"), err);
+            setError(t("failed_load_item"));
             setLoading(false);
         }
     };
@@ -56,7 +58,7 @@ const ShowAllItems = () => {
         if (id == null) return;
 
         try {
-            await apiClient.delete(`http://localhost:1409/api/items/${id}`);
+            await apiClient.delete(`/admin/items/${id}`);
             setItemId(null);
             fetchItems();
         } catch (err) {
@@ -67,7 +69,7 @@ const ShowAllItems = () => {
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            await apiClient.put(`http://localhost:1409/api/items/${editingItem.id}`, editingItem);
+            await apiClient.put(`/admin/items/${editingItem.id}`, editingItem);
             setEditingItem(null);
             fetchItems();
         } catch (err) {
@@ -80,7 +82,7 @@ const ShowAllItems = () => {
 
     return (
         <div>
-            <h1>All Items</h1>
+            <h1>{t("all_items")}</h1>
 
             <SearchItemById onSearch={handleSearchById}/>
             <SearchItemByTitle onSearch={handleSearchByTitle}/>
@@ -94,7 +96,7 @@ const ShowAllItems = () => {
                     <p>Manufacturer: {item.manufacturer}</p>
 
                     <Link to={`/admin/items/${item.id}`}>
-                        <button>View details</button>
+                        <button>{t("detail")}</button>
                     </Link>
                     <button onClick={() => navigate(`/admin/items/update/${item.id}`)} style={{marginLeft: '5px'}}>
                         Update info

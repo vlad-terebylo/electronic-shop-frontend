@@ -16,7 +16,7 @@ const AddNewItem = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        apiClient.get('http://localhost:1409/api/itemTypes')
+        apiClient.get('/itemTypes')
             .then(res => setItemTypes(res.data))
             .catch(err => console.error('Error fetching item types:', err));
     }, []);
@@ -40,7 +40,7 @@ const AddNewItem = () => {
         if (!validate()) return;
 
         try {
-            await apiClient.post('http://localhost:1409/api/items', {
+            await apiClient.post('/admin/items', {
                 title: title.trim(),
                 price: parseInt(price),
                 producingYear: producingYear,

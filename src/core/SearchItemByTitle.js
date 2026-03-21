@@ -1,15 +1,19 @@
 import {useState} from "react";
+import {useTranslation} from "react-i18next";
+
 
 const SearchItemByTitle = ({onSearch}) => {
     const [itemTitle, setItemTitle] = useState("");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const {t} = useTranslation();
+
 
     const handleSearch = (e) => {
         e.preventDefault();
 
         if (!itemTitle) {
-            setError("Please enter a valid item title");
+            setError(t("item_title_error"));
             return;
         }
 
@@ -26,13 +30,13 @@ const SearchItemByTitle = ({onSearch}) => {
             <form onSubmit={handleSearch}>
                 <input
                     type="text"
-                    placeholder="Search item by title"
+                    placeholder={t("search")}
                     value={itemTitle}
                     onChange={(e) => setItemTitle(e.target.value)}
                     style={{marginRight: "10px"}}
                 />
                 <button type="submit" disabled={loading}>
-                    {loading ? "Searching..." : "Search"}
+                    {loading ? t("searching") : t("search_btn")}
                 </button>
             </form>
 

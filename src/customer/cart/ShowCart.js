@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {addToCart, getCart, removeFromCart, clearCart, updateCartItemQuantity} from "./CartService";
+import {getCart, removeFromCart, clearCart, updateCartItemQuantity} from "./CartService";
+import {useTranslation} from "react-i18next";
 
 const ShowCart = () => {
     const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState(0);
     const [cartItems, setCartItems] = useState([]);
-    const [errors, setErrors] = useState([]);
+    const {t, i18n} = useTranslation();
+
 
     useEffect(() => {
         setCartItems(getCart());
@@ -55,14 +57,14 @@ const ShowCart = () => {
 
     return (
         <div className="container">
-            <h1>Your shopping cart</h1>
+            <h1>{t("cart")}</h1>
             {cartItems.map(item => (
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{item.title}</h3>
-                    <p>Price per item: {item.price}</p>
-                    <p>Price: {item.price * item.quantity}</p>
+                    <p>{t("price_for_one_item")}: {item.price}</p>
+                    <p>{t("price")}: {item.price * item.quantity}</p>
                     <div style={{display: "flex", alignItems: "center", marginBottom: "5px"}}>
-                        <label>Quantity: </label>
+                        <label>{t("quantity")}: </label>
                         <input
                             value={item.quantity}
                             min={1}
@@ -75,7 +77,7 @@ const ShowCart = () => {
                         </span>
                     </div>
                     <button onClick={() => removeItemHandler(item.id)} style={{margin: '5px'}}>
-                        Remove item
+                        {t("remove")}
                     </button>
                 </div>
             ))}
@@ -94,16 +96,18 @@ const ShowCart = () => {
                         onClick={handlePurchase}
                         disabled={cartItems.some(item => !item.quantity || item.quantity <= 0)}
                         style={{margin: '10px'}}>
-                        Make a purchase
+                        {t("make_purchase")}
                     </button>
                     <button onClick={clearCartHandler} style={{margin: '5px'}}>
-                        Clear cart
+                        {t("clear_cart")}
                     </button>
                 </>
             )}
 
+            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
+            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
             <button onClick={() => navigate("/")} className="button-group">
-                ← Home
+                ← {t("home")}
             </button>
         </div>
     );

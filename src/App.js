@@ -15,29 +15,32 @@ import ShowCart from "./customer/cart/ShowCart";
 import PurchasePage from "./customer/purchase/PurchasePage";
 import LoginPage from "./authorization/LoginPage";
 import SignUpPage from "./authorization/CreateAccount";
-
-
+import UnauthorizedPage from "./authorization/UnauthorizedPage";
+import ProtectedRoute from "./core/ProtectedRoute";
+import './i18n';
+import AdminRoute from "./core/AdminRoute";
 
 function App() {
     return (
         <Router>
             <div>
                 <Routes>
-                    <Route path="/admin" element={<AdminPage/>}/>
-                    <Route path="/admin/items/:id" element={<ShowItemById/>}/>
-                    <Route path={"/admin/items/add"} element={<AddNewItem/>}/>
-                    <Route path={"/admin/item-types/add"} element={<AddNewItemType/>}/>
-                    <Route path="/admin/items/update/:id" element={<UpdateItem/>}/>
-                    <Route path="/admin/itemTypes/update/:id" element={<UpdateItemType/>}/>
-                    <Route path="/admin/item-types" element={<ShowAllItemTypes/>}/>
-                    <Route path="/admin/purchases" element={<PurchasesPage/>}/>
+                    <Route path="/admin" element={<AdminRoute><AdminPage/></AdminRoute>}/>
+                    <Route path="/admin/items/:id" element={<AdminRoute><ShowItemById/></AdminRoute>}/>
+                    <Route path={"/admin/items/add"} element={<AdminRoute><AddNewItem/></AdminRoute>}/>
+                    <Route path={"/admin/item-types/add"} element={<AdminRoute><AddNewItemType/></AdminRoute>}/>
+                    <Route path="/admin/items/update/:id" element={<AdminRoute><UpdateItem/></AdminRoute>}/>
+                    <Route path="/admin/itemTypes/update/:id" element={<AdminRoute><UpdateItemType/></AdminRoute>}/>
+                    <Route path="/admin/item-types" element={<AdminRoute><ShowAllItemTypes/></AdminRoute>}/>
+                    <Route path="/admin/purchases" element={<AdminRoute><PurchasesPage/></AdminRoute>}/>
 
                     <Route path="/" element={<MainPage/>}/>
                     <Route path="/items/:id" element={<ShowItemByIdU/>}/>
                     <Route path="/items/cart" element={<ShowCart/>}/>
-                    <Route path="/items/cart/purchase" element={<PurchasePage/>}/>
+                    <Route path="/items/cart/purchase" element={<ProtectedRoute><PurchasePage/></ProtectedRoute>}/>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/signUp" element={<SignUpPage/>}/>
+                    <Route path="/non-authorized" element={<UnauthorizedPage/>}/>
                 </Routes>
             </div>
         </Router>

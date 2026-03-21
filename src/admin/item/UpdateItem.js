@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../../core/ApiClient';
 
 const UpdateItem = () => {
     const {id} = useParams();
@@ -12,7 +12,7 @@ const UpdateItem = () => {
     const [errors, setErrors] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:1409/api/items/${id}`)
+        apiClient.get(`/items/${id}`)
             .then(res => {
                 setItem(res.data);
                 setLoading(false);
@@ -20,7 +20,7 @@ const UpdateItem = () => {
             .catch(err => {
                 setLoading(false);
             });
-        axios.get('http://localhost:1409/api/itemTypes')
+        apiClient.get('/itemTypes')
             .then(res => {
                 setItemTypes(res.data);
                 setLoading(false);
@@ -52,7 +52,7 @@ const UpdateItem = () => {
         if (!validate()) return;
 
         try {
-            await axios.put(`http://localhost:1409/api/items/${id}`, item);
+            await apiClient.put(`/admin/items/${id}`, item);
             navigate('/admin');
         } catch (err) {
             console.error('Error updating item', err);

@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../../core/ApiClient';
 
 const UpdateItemType = () => {
     const {id} = useParams();
@@ -11,7 +11,7 @@ const UpdateItemType = () => {
     const [errors, setErrors] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:1409/api/itemTypes/${id}`)
+        apiClient.get(`/itemTypes/${id}`)
             .then(res => {
                 setItemTypeItem(res.data.title);
                 setLoading(false);
@@ -38,7 +38,7 @@ const UpdateItemType = () => {
         if (!validate()) return;
 
         try {
-            await axios.patch(`http://localhost:1409/api/itemTypes/${id}`, {title});
+            await apiClient.patch(`/admin/itemTypes/${id}`, {title});
             navigate('/admin/item-types');
         } catch (err) {
             console.error('Error updating item type', err);

@@ -2,35 +2,22 @@ import React from 'react';
 import ShowAllItems from './ShowAllItems';
 import {Link} from "react-router-dom";
 import AuthButton from "../../core/AuthButton";
-import {callBackend} from "../../core/ApiHelper";
-import {useIsAuthenticated, useMsal} from "@azure/msal-react";
+import {useTranslation} from "react-i18next";
+
 
 const AdminPage = () => {
-    const {instance, accounts} = useMsal();
-
-    const data = async () => {
-        try {
-            console.log(accounts[0]);
-            console.log(instance.getActiveAccount);
-            const data = await callBackend(instance, accounts);
-            console.log(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const {t, i18n} = useTranslation();
 
     return (
         <div className="container">
-            <h1>Main admin page</h1>
-
-            <button onClick={data}>Call backend</button>
+            <h1>{t("main_admin_page")}</h1>
 
             <AuthButton/>
 
             <div className="button-group">
 
                 <Link to="/admin/items/add">
-                    <button>Add new item</button>
+                    <button>{t("add_new_item")}</button>
                 </Link>
 
                 <Link to="/admin/item-types">
@@ -40,6 +27,9 @@ const AdminPage = () => {
                 <Link to="/admin/purchases">
                     <button>Show all customers' purchases</button>
                 </Link>
+
+                <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
+                <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
 
 
             </div>

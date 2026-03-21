@@ -1,23 +1,28 @@
 import {useMsal, useIsAuthenticated} from "@azure/msal-react";
-import {loginRequest} from "../authConfig";
+import {apiRequest} from "../authConfig";
 import {useNavigate} from "react-router-dom";
 
 const AuthButton = () => {
-
     const {instance} = useMsal();
     const isAuthenticated = useIsAuthenticated();
     const navigate = useNavigate();
 
-    const handleLogin = () => {
-        instance.loginPopup(loginRequest);
-
-        navigate("/admin");
+    const handleLogin = async () => {
+        try {
+            const result = await instance.loginPopup(apiRequest);
+            const roles = result?.idTokenClaims?.roles || [];
+            navigate(roles.includes("admin") ? "/admin" : "/");
+        } catch (err) {
+            console.error("Login failed", err);
+        }
     };
 
-    const handleLogout = () => {
-        instance.logoutPopup();
-
-        navigate("/");
+    const handleLogout = async () => {
+        try {
+            await instance.logoutPopup();
+        } finally {
+            navigate("/");
+        }
     };
 
     if (!isAuthenticated) {

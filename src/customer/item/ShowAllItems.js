@@ -1,10 +1,12 @@
 import {useState, useEffect} from 'react';
-import axios from 'axios';
+import publicApiClient from '../../core/PublicApiClient';
 import {Link} from 'react-router-dom';
 import SearchItemByTitle from "../../core/SearchItemByTitle";
 import {addToCart} from "../cart/CartService";
 import CartPopup from "../cart/CartPopup";
 import AddToCartPopup from "../cart/AddToCartPopup";
+import {useTranslation} from "react-i18next";
+
 
 const ShowAllItems = () => {
     const [items, setItems] = useState([]);
@@ -13,6 +15,8 @@ const ShowAllItems = () => {
     const [error, setError] = useState(null);
     const [popupItem, setPopupItem] = useState(null);
     const [popupMessage, setPopupMessage] = useState(null);
+    const {t} = useTranslation();
+
 
     useEffect(() => {
         fetchItems();
@@ -20,13 +24,13 @@ const ShowAllItems = () => {
 
     const fetchItems = async () => {
         try {
-            const res = await axios.get('http://localhost:1409/api/items');
+            const res = await publicApiClient.get('/items');
             const data = Array.isArray(res.data) ? res.data : res.data.items;
             setItems(data || []);
             setLoading(false);
         } catch (err) {
-            console.error('Error fetching items', err);
-            setError("Failed to load items");
+            console.error(t("error_fetching_item"), err);
+            setError(t("failed_load_item"));
             setLoading(false);
         }
     };
@@ -47,8 +51,8 @@ const ShowAllItems = () => {
 
     const handleAddToCart = (item, quantity) => {
         const result = addToCart(item, quantity);
-        if (result === false) alert(`Updated quantity for ${item.title} in cart`);
-        else if (result === "exceed") alert(`Cannot add more than ${item.quantity} items`);
+        if (result === false) alert(t("updated_quantity") `${item.title}`);
+        else if (result === "exceed") alert(t("cannot_add_more_than")`${item.quantity}`);
     };
 
     const closePopup = () => setPopupMessage(null);
@@ -58,29 +62,29 @@ const ShowAllItems = () => {
 
     return (
         <div className="container">
-            <h1>All Items</h1>
+            <h1>{t("all_items")}</h1>
             <SearchItemByTitle onSearch={handleSearchByTitle}/>
 
             {(filteredItems || items).map(item => (
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{item.title || item.name}</h3>
-                    <p>Price: {item.price}</p>
-                    <p>Quantity: {item.quantity}</p>
-                    <p>Manufacturer: {item.manufacturer}</p>
+                    <p>{t("price")}: {item.price}</p>
+                    <p>{t("quantity")}: {item.quantity}</p>
+                    <p>{t("manufacturer")}: {item.manufacturer}</p>
 
                     <button onClick={() => handleAddClick(item)} style={{marginLeft: '5px'}}>
-                        Add to cart
+                        {t("add")}
                     </button>
 
                     <Link to={`/items/${item.id}`}>
-                        <button style={{marginLeft: '5px'}}>View details</button>
+                        <button style={{marginLeft: '5px'}}>{t("detail")}</button>
                     </Link>
                 </div>
             ))}
 
             {filteredItems && (
                 <button onClick={() => setFilteredItems(null)} style={{marginBottom: "15px"}}>
-                    Show All Items
+                    {t("all_items")}
                 </button>
             )}
 

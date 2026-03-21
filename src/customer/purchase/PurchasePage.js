@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../../core/ApiClient';
+import {useTranslation} from "react-i18next";
 
 const PurchasePage = () => {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ const PurchasePage = () => {
     const [cardNumber, setCardNumber] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const {t, i18n} = useTranslation();
 
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -48,7 +50,7 @@ const PurchasePage = () => {
                 }))
             };
 
-            await axios.post('http://localhost:1409/api/purchase', payload);
+            await apiClient.post('/authenticated/purchase', payload);
 
             localStorage.removeItem('cart');
             setCartItems([]);
@@ -66,21 +68,23 @@ const PurchasePage = () => {
 
     return (
         <div className="container">
-            <h1>Make a purchase</h1>
+            <h1>{t("make_purchase")}</h1>
 
             <button onClick={() => navigate('/items/cart')} style={{margin: '5px'}}>
-                Back to cart
+                {t("cart_btn")}
             </button>
             <button onClick={() => navigate('/')} style={{margin: '5px'}}>
-                Home
+                {t("home")}
             </button>
+            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
+            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
 
             {cartItems.map(item => (
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{item.title}</h3>
-                    <p>Total quantity: {item.quantity}</p>
-                    <p>Price per item: {item.price}</p>
-                    <p>Price for {item.quantity} items: {item.price * item.quantity}</p>
+                    <p>{t("total_quantity")}: {item.quantity}</p>
+                    <p>{t("price_for_one_item")}: {item.price}</p>
+                    <p>{t("total_price")}: {item.price * item.quantity}</p>
                 </div>
             ))}
 
@@ -89,7 +93,7 @@ const PurchasePage = () => {
                 marginTop: '15px',
                 paddingTop: '10px'
             }}>
-                <h2>Total price: {totalPrice}</h2>
+                <h2>{t("total_price")}: {totalPrice}</h2>
             </div>
 
             <div style={{marginTop: '20px'}}>
@@ -102,7 +106,7 @@ const PurchasePage = () => {
                 />
                 <input
                     type="text"
-                    placeholder="Card Number"
+                    placeholder={t("card_number")}
                     value={cardNumber}
                     onChange={e => setCardNumber(e.target.value)}
                     style={{marginBottom: '10px', display: 'block'}}
@@ -114,7 +118,7 @@ const PurchasePage = () => {
             <div style={{margin: '5px'}}>
                 {cartItems.length > 0 && (
                     <button onClick={handlePay} disabled={loading} style={{marginRight: '10px'}}>
-                        {loading ? 'Processing...' : 'Pay'}
+                        {loading ? t("processing") : t("pay")}
                     </button>
                 )}
             </div>

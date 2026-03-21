@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import axios from 'axios';
+import apiClient from '../../core/ApiClient';
 import {Link, useNavigate} from 'react-router-dom';
 import '../../App.css';
 
@@ -15,7 +15,7 @@ const ShowAllItemTypes = () => {
 
     const fetchItemTypes = async () => {
         try {
-            const itemTypeList = await axios.get('http://localhost:1409/api/itemTypes');
+            const itemTypeList = await apiClient.get('/itemTypes');
             const data = Array.isArray(itemTypeList.data) ? itemTypeList.data : itemTypeList.data.itemType;
             setItemType(data || []);
             setLoading(false);
@@ -29,7 +29,7 @@ const ShowAllItemTypes = () => {
         if (id == null) return;
 
         try {
-            await axios.delete(`http://localhost:1409/api/itemTypes/${id}`);
+            await apiClient.delete(`/admin/itemTypes/${id}`);
             setItemIdForDelete(null);
             fetchItemTypes();
         } catch (err) {

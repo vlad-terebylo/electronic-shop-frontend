@@ -1,9 +1,10 @@
-import {useState, useEffect} from "react";
-import axios from "axios";
+import React, {useState, useEffect} from "react";
+import publicApiClient from '../../core/PublicApiClient';
 import {useParams, useNavigate} from 'react-router-dom';
 import {addToCart} from "../cart/CartService";
 import CartPopup from "../cart/CartPopup";
 import AddToCartPopup from "../cart/AddToCartPopup";
+import {useTranslation} from "react-i18next";
 
 
 const ShowItemByIdU = () => {
@@ -16,6 +17,7 @@ const ShowItemByIdU = () => {
     const [error, setError] = useState(null);
     const [popupItem, setPopupItem] = useState(null);
     const [popupMessage, setPopupMessage] = useState(null);
+    const {t, i18n} = useTranslation();
 
 
     const formatDate = (producingYear) => {
@@ -25,11 +27,11 @@ const ShowItemByIdU = () => {
     useEffect(() => {
         const fetchItem = async () => {
             try {
-                const item = await axios.get(`http://localhost:1409/api/items/${id}`);
+                const item = await publicApiClient.get(`/items/${id}`);
                 const data = item.data;
                 setItem(item.data);
 
-                const itemType = await axios.get(`http://localhost:1409/api/itemTypes/${data.itemTypeId}`);
+                const itemType = await publicApiClient.get(`/itemTypes/${data.itemTypeId}`);
                 setItemTypeTitle(itemType.data.title);
 
                 setLoading(false);
@@ -59,21 +61,25 @@ const ShowItemByIdU = () => {
     if (error) return <p>{error}</p>;
     return (
         <div className="container">
-            <h1>Item Details</h1>
+            <h1>{t("detail")}</h1>
             <ul>
-                <li><strong>Title:</strong> {item.title}</li>
-                <li><strong>Price:</strong> {item.price}</li>
-                <li><strong>Quantity:</strong> {item.quantity}</li>
-                <li><strong>Producing Year:</strong> {formatDate(item.producingYear)}</li>
-                <li><strong>Manufacturer:</strong> {item.manufacturer}</li>
-                <li><strong>Type:</strong> {itemTypeTitle}</li>
+                <li><strong>{t("title")}:</strong> {item.title}</li>
+                <li><strong>{t("price")}:</strong> {item.price}</li>
+                <li><strong>{t("quantity")}:</strong> {item.quantity}</li>
+                <li><strong>{t("year")}:</strong> {formatDate(item.producingYear)}</li>
+                <li><strong>{t("manufacturer")}:</strong> {item.manufacturer}</li>
+                <li><strong>{t("type")}:</strong> {itemTypeTitle}</li>
             </ul>
             <button onClick={() => navigate(-1)} className="button-group">
-                ← Home
+                ← {t("home")}
             </button>
             <button onClick={() => handleAddClick(item)} className="button-group">
-                Add to cart
+                {t("add")}
             </button>
+
+            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
+            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
+
 
             {popupItem && (
                 <AddToCartPopup

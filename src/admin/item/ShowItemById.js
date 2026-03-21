@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import axios from "axios";
+import apiClient from '../../core/ApiClient';
 import {useParams, useNavigate} from 'react-router-dom';
 
 
@@ -20,11 +20,11 @@ const ShowItemById = () => {
     useEffect(() => {
         const fetchItem = async () => {
             try {
-                const item = await axios.get(`http://localhost:1409/api/items/${id}`);
+                const item = await apiClient.get(`/items/${id}`);
                 const data = item.data;
                 setItem(item.data);
 
-                const itemType = await axios.get(`http://localhost:1409/api/itemTypes/${data.itemTypeId}`);
+                const itemType = await apiClient.get(`/itemTypes/${data.itemTypeId}`);
                 setItemTypeTitle(itemType.data.title);
 
                 setLoading(false);

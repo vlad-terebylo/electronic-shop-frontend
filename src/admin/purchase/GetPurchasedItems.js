@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import axios from "axios";
+import apiClient from "../../core/ApiClient";
 import {useNavigate} from "react-router-dom";
 
 const PurchasesPage = () => {
@@ -15,8 +15,8 @@ const PurchasesPage = () => {
 
     const fetchPurchases = async () => {
         try {
-            const res = await axios.get("http://localhost:1409/api/purchase");
-            const itemsRes = await axios.get("http://localhost:1409/api/items");
+            const res = await apiClient.get("authenticated/purchase");
+            const itemsRes = await apiClient.get("/items");
 
             const map = {};
             itemsRes.data.forEach(item => {
