@@ -17,7 +17,7 @@ const AdminRoute = ({children}) => {
     console.log(roles);
 
     if (!roles.includes("admin")) {
-        return <Navigate to="/non-authorized" replace/>;
+        return <Navigate to="/:lang/non-authorized" replace/>;
     }
 
     return children;

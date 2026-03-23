@@ -25,22 +25,22 @@ function App() {
         <Router>
             <div>
                 <Routes>
-                    <Route path="/admin" element={<AdminRoute><AdminPage/></AdminRoute>}/>
-                    <Route path="/admin/items/:id" element={<AdminRoute><ShowItemById/></AdminRoute>}/>
-                    <Route path={"/admin/items/add"} element={<AdminRoute><AddNewItem/></AdminRoute>}/>
-                    <Route path={"/admin/item-types/add"} element={<AdminRoute><AddNewItemType/></AdminRoute>}/>
-                    <Route path="/admin/items/update/:id" element={<AdminRoute><UpdateItem/></AdminRoute>}/>
-                    <Route path="/admin/itemTypes/update/:id" element={<AdminRoute><UpdateItemType/></AdminRoute>}/>
-                    <Route path="/admin/item-types" element={<AdminRoute><ShowAllItemTypes/></AdminRoute>}/>
-                    <Route path="/admin/purchases" element={<AdminRoute><PurchasesPage/></AdminRoute>}/>
+                    <Route path="/:lang/admin" element={<AdminRoute><AdminPage/></AdminRoute>}/>
+                    <Route path="/:lang/admin/items/:id" element={<AdminRoute><ShowItemById/></AdminRoute>}/>
+                    <Route path="/:lang/admin/items/add" element={<AdminRoute><AddNewItem/></AdminRoute>}/>
+                    <Route path="/:lang/admin/item-types/add" element={<AdminRoute><AddNewItemType/></AdminRoute>}/>
+                    <Route path="/:lang/admin/items/update/:id" element={<AdminRoute><UpdateItem/></AdminRoute>}/>
+                    <Route path="/:lang/admin/itemTypes/update/:id" element={<AdminRoute><UpdateItemType/></AdminRoute>}/>
+                    <Route path="/:lang/admin/item-types" element={<AdminRoute><ShowAllItemTypes/></AdminRoute>}/>
+                    <Route path="/:lang/admin/purchases" element={<AdminRoute><PurchasesPage/></AdminRoute>}/>
 
-                    <Route path="/" element={<MainPage/>}/>
-                    <Route path="/items/:id" element={<ShowItemByIdU/>}/>
-                    <Route path="/items/cart" element={<ShowCart/>}/>
-                    <Route path="/items/cart/purchase" element={<ProtectedRoute><PurchasePage/></ProtectedRoute>}/>
-                    <Route path="/login" element={<LoginPage/>}/>
-                    <Route path="/signUp" element={<SignUpPage/>}/>
-                    <Route path="/non-authorized" element={<UnauthorizedPage/>}/>
+                    <Route path="/:lang/" element={<MainPage/>}/>
+                    <Route path="/:lang/items/:id" element={<ShowItemByIdU/>}/>
+                    <Route path="/:lang/items/cart" element={<ShowCart/>}/>
+                    <Route path="/:lang/items/cart/purchase" element={<ProtectedRoute><PurchasePage/></ProtectedRoute>}/>
+                    <Route path="/:lang/login" element={<LoginPage/>}/>
+                    <Route path="/:lang/signUp" element={<SignUpPage/>}/>
+                    <Route path="/:lang/non-authorized" element={<UnauthorizedPage/>}/>
                 </Routes>
             </div>
         </Router>

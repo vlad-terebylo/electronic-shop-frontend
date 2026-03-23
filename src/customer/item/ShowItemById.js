@@ -37,7 +37,7 @@ const ShowItemByIdU = () => {
                 setLoading(false);
             } catch (err) {
                 console.error(err);
-                setError('Error fetching data');
+                setError(t("error_fetching_item"));
                 setLoading(false);
             }
         };

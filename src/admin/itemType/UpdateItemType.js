@@ -39,7 +39,7 @@ const UpdateItemType = () => {
 
         try {
             await apiClient.patch(`/admin/itemTypes/${id}`, {title});
-            navigate('/admin/item-types');
+            navigate('/:lang/admin/item-types');
         } catch (err) {
             console.error('Error updating item type', err);
             alert('Failed to save changes');

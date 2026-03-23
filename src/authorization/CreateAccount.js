@@ -74,7 +74,7 @@ const SignUpPage = () => {
                 />
 
                 {error && <p style={{color: 'red', fontSize: '14px'}}>{error}</p>}
-                <button onClick={() => navigate('/')}
+                <button onClick={() => navigate('/:lang/')}
                         style={{
                             textAlign: 'center',
                             padding: '10px',
@@ -88,7 +88,7 @@ const SignUpPage = () => {
                     Back to main page
                 </button>
 
-                <button onClick={() => navigate('/login')}
+                <button onClick={() => navigate('/:lang/login')}
                         style={{
                             textAlign: 'center',
                             padding: '10px',
@@ -101,7 +101,7 @@ const SignUpPage = () => {
                         }}>
                     Already have an account? Sign In
                 </button>
-                <button onClick={() => navigate('/admin')}
+                <button onClick={() => navigate('/:lang/admin')}
                         type="submit"
                         style={{
                             padding: '10px',

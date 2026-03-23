@@ -52,7 +52,7 @@ const ShowCart = () => {
     };
 
     const handlePurchase = () => {
-        navigate('/items/cart/purchase');
+        navigate('/:lang/items/cart/purchase');
     };
 
     return (
@@ -106,7 +106,7 @@ const ShowCart = () => {
 
             <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
             <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
-            <button onClick={() => navigate("/")} className="button-group">
+            <button onClick={() => navigate("/:lang/")} className="button-group">
                 ← {t("home")}
             </button>
         </div>

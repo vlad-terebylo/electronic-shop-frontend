@@ -61,7 +61,7 @@ const ShowAllItems = () => {
     if (error) return <p style={{color: "red"}}>{error}</p>;
 
     return (
-        <div className="container">
+        <div>
             <h1>{t("all_items")}</h1>
             <SearchItemByTitle onSearch={handleSearchByTitle}/>
 
@@ -76,7 +76,7 @@ const ShowAllItems = () => {
                         {t("add")}
                     </button>
 
-                    <Link to={`/items/${item.id}`}>
+                    <Link to={`/:lang/items/${item.id}`}>
                         <button style={{marginLeft: '5px'}}>{t("detail")}</button>
                     </Link>
                 </div>

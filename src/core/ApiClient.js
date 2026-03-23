@@ -11,7 +11,7 @@ apiClient.interceptors.request.use(async config => {
         config.headers.Authorization = `Bearer ${token}`;
         return config;
     } catch (e) {
-        window.location.replace('/non-authorized');
+        window.location.replace('/:lang/non-authorized');
         return Promise.reject(e);
     }
 }, error => Promise.reject(error));
@@ -20,7 +20,7 @@ apiClient.interceptors.response.use(
     response => response,
     error => {
         if (error.response?.status === 401) {
-            window.location.replace('/non-authorized');
+            window.location.replace('/:lang/non-authorized');
         }
         return Promise.reject(error);
     }

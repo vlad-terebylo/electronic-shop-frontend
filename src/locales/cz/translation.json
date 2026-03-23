@@ -25,6 +25,7 @@
   "error_fetching_item": "Chyba  fetchingu zboží",
   "wrong_id_error": "Prosím uveďte správný ID",
   "failed_load_item": "Chyba v načítání zboží",
+  "loading": "Uploudování...",
   "updated_quantity": "Obnovit počet na",
   "cannot_add_more_than": "Nemůžeme přidat víc než ",
   "remove": "Smazat zboží",

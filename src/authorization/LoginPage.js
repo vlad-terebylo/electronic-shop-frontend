@@ -60,7 +60,7 @@ const LoginPage = () => {
                 />
 
                 {error && <p style={{color: 'red', fontSize: '14px'}}>{error}</p>}
-                <button onClick={() => navigate('/')}
+                <button onClick={() => navigate('/:lang/')}
                         style={{
                             textAlign: 'center',
                             padding: '10px',
@@ -73,7 +73,7 @@ const LoginPage = () => {
                         }}>
                     Back to main page
                 </button>
-                <button onClick={() => navigate('/admin')}
+                <button onClick={() => navigate('/:lang/admin')}
                         type="submit"
                         style={{
                             padding: '10px',

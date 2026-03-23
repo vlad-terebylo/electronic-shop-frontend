@@ -57,7 +57,7 @@ const PurchasePage = () => {
             setTotalPrice(0);
 
             alert('Purchase successful');
-            navigate('/');
+            navigate('/:lang/');
         } catch (err) {
             console.error(err);
             setError('Failed to complete purchase');
@@ -70,10 +70,10 @@ const PurchasePage = () => {
         <div className="container">
             <h1>{t("make_purchase")}</h1>
 
-            <button onClick={() => navigate('/items/cart')} style={{margin: '5px'}}>
+            <button onClick={() => navigate('/:lang/items/cart')} style={{margin: '5px'}}>
                 {t("cart_btn")}
             </button>
-            <button onClick={() => navigate('/')} style={{margin: '5px'}}>
+            <button onClick={() => navigate('/:lang/')} style={{margin: '5px'}}>
                 {t("home")}
             </button>
             <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>

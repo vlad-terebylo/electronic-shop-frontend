@@ -16,15 +16,15 @@ const AdminPage = () => {
 
             <div className="button-group">
 
-                <Link to="/admin/items/add">
+                <Link to="/:lang/admin/items/add">
                     <button>{t("add_new_item")}</button>
                 </Link>
 
-                <Link to="/admin/item-types">
+                <Link to="/:lang/admin/item-types">
                     <button>Show all item types</button>
                 </Link>
 
-                <Link to="/admin/purchases">
+                <Link to="/:lang/admin/purchases">
                     <button>Show all customers' purchases</button>
                 </Link>
 

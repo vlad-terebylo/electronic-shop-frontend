@@ -25,6 +25,7 @@
   "wrong_id_error": "Please enter a valid item ID",
   "error_fetching_item": "Error fetching items",
   "failed_load_item": "Failed to load items",
+  "loading": "Loading...",
   "updated_quantity": "Updated quantity for",
   "cannot_add_more_than": "Cannot add more than ",
   "remove": "Remove item",

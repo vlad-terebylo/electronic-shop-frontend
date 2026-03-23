@@ -5,7 +5,7 @@ const ProtectedRoute = ({children}) => {
     const isAuthenticated = useIsAuthenticated();
 
     if (!isAuthenticated) {
-        return <Navigate to="/non-authorized" replace/>;
+        return <Navigate to="/:lang/non-authorized" replace/>;
     }
 
     return children;

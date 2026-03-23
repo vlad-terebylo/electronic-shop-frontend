@@ -53,7 +53,7 @@ const UpdateItem = () => {
 
         try {
             await apiClient.put(`/admin/items/${id}`, item);
-            navigate('/admin');
+            navigate('/:lang/admin');
         } catch (err) {
             console.error('Error updating item', err);
             alert('Failed to save changes')

@@ -1,6 +1,7 @@
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import apiClient from '../../core/ApiClient';
 import {useParams, useNavigate} from 'react-router-dom';
+import {useTranslation} from "react-i18next";
 
 
 const ShowItemById = () => {
@@ -11,6 +12,7 @@ const ShowItemById = () => {
     const [itemTypeTitle, setItemTypeTitle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const {t, i18n} = useTranslation();
 
 
     const formatDate = (producingYear) => {
@@ -30,7 +32,7 @@ const ShowItemById = () => {
                 setLoading(false);
             } catch (err) {
                 console.error(err);
-                setError('Error fetching data');
+                setError(t("error_fetching_item"));
                 setLoading(false);
             }
         };
@@ -38,24 +40,27 @@ const ShowItemById = () => {
         fetchItem();
     }, [id]);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>{t("loading")}</p>;
     if (error) return <p>{error}</p>;
-    if (!item) return <p>The object was not found</p>;
+    if (!item) return <p>{t("failed_load_item")}</p>;
     return (
         <div className="container">
-            <h1>Item Details</h1>
+            <h1>{t("detail")}</h1>
             <ul>
                 <li><strong>Id:</strong> {item.id}</li>
-                <li><strong>Title:</strong> {item.title}</li>
-                <li><strong>Price:</strong> {item.price}</li>
-                <li><strong>Quantity:</strong> {item.quantity}</li>
-                <li><strong>Producing Year:</strong> {formatDate(item.producingYear)}</li>
-                <li><strong>Manufacturer:</strong> {item.manufacturer}</li>
-                <li><strong>Type:</strong> {itemTypeTitle}</li>
+                <li><strong>{t("title")}:</strong> {item.title}</li>
+                <li><strong>{t("price")}:</strong> {item.price}</li>
+                <li><strong>{t("quantity")}:</strong> {item.quantity}</li>
+                <li><strong>{t("year")}:</strong> {formatDate(item.producingYear)}</li>
+                <li><strong>{t("manufacturer")}:</strong> {item.manufacturer}</li>
+                <li><strong>{t("type")}:</strong> {itemTypeTitle}</li>
             </ul>
             <button onClick={() => navigate(-1)} className="button-group">
-                ← Home
+                ← {t("home")}
             </button>
+
+            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
+            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
         </div>
     );
 };

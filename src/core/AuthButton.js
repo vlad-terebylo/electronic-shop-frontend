@@ -11,7 +11,7 @@ const AuthButton = () => {
         try {
             const result = await instance.loginPopup(apiRequest);
             const roles = result?.idTokenClaims?.roles || [];
-            navigate(roles.includes("admin") ? "/admin" : "/");
+            navigate(roles.includes("admin") ? "/:lang/admin" : "/:lang/");
         } catch (err) {
             console.error("Login failed", err);
         }
@@ -21,7 +21,7 @@ const AuthButton = () => {
         try {
             await instance.logoutPopup();
         } finally {
-            navigate("/");
+            navigate("/:lang/");
         }
     };
 

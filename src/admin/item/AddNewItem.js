@@ -55,7 +55,7 @@ const AddNewItem = () => {
             setManufacturer('');
             setQuantity('');
             setItemTypeId('');
-            navigate('/admin')
+            navigate('/:lang/admin')
         } catch (error
             ) {
             console.log("Error - ", error);

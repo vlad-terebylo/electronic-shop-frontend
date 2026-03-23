@@ -58,7 +58,7 @@ const ShowAllItems = () => {
         if (id == null) return;
 
         try {
-            await apiClient.delete(`/admin/items/${id}`);
+            await apiClient.delete(`/:lang/admin/items/${id}`);
             setItemId(null);
             fetchItems();
         } catch (err) {
@@ -69,7 +69,7 @@ const ShowAllItems = () => {
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            await apiClient.put(`/admin/items/${editingItem.id}`, editingItem);
+            await apiClient.put(`/:lang/admin/items/${editingItem.id}`, editingItem);
             setEditingItem(null);
             fetchItems();
         } catch (err) {
@@ -95,7 +95,7 @@ const ShowAllItems = () => {
                     <p>Quantity: {item.quantity}</p>
                     <p>Manufacturer: {item.manufacturer}</p>
 
-                    <Link to={`/admin/items/${item.id}`}>
+                    <Link to={`/:lang/admin/items/${item.id}`}>
                         <button>{t("detail")}</button>
                     </Link>
                     <button onClick={() => navigate(`/admin/items/update/${item.id}`)} style={{marginLeft: '5px'}}>

@@ -45,10 +45,10 @@ const ShowAllItemTypes = () => {
         <div className="container">
             <h1>All item types</h1>
             <div className="button-group">
-                <Link to="/admin/item-types/add">
+                <Link to="/:lang/admin/item-types/add">
                     <button style={{marginBottom: '20px'}}>Add New Item Type</button>
                 </Link>
-                <Link to="/admin">
+                <Link to="/:lang/admin">
                     <button style={{marginBottom: '20px'}}>← Back to main page</button>
                 </Link>
             </div>
@@ -56,7 +56,7 @@ const ShowAllItemTypes = () => {
             {itemTypes.map(itemType => (
                 <div key={itemType.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{itemType.title}</h3>
-                    <button onClick={() => navigate(`/admin/itemTypes/update/${itemType.id}`)}
+                    <button onClick={() => navigate(`/:lang/admin/itemTypes/update/${itemType.id}`)}
                             style={{marginRight: '10px'}}>
                         Update
                     </button>

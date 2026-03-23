@@ -25,7 +25,7 @@ const AddNewItemType = () => {
             await apiClient.post('/admin/itemTypes', {title});
             console.log('ItemType added:', title);
             setTitle('');
-            navigate('/admin/item-types');
+            navigate('/:lang/admin/item-types');
         } catch (err) {
             console.error('Error adding item type:', err);
         }
