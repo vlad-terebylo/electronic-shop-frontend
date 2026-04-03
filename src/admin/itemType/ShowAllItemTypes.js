@@ -1,13 +1,17 @@
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import apiClient from '../../core/ApiClient';
 import {Link, useNavigate} from 'react-router-dom';
 import '../../App.css';
+import {useLocale} from "../../core/UseLocales";
+import {useTranslation} from "react-i18next";
 
 const ShowAllItemTypes = () => {
     const [itemTypes, setItemType] = useState([]);
     const [loading, setLoading] = useState(true);
     const [id, setItemIdForDelete] = useState(null);
     const navigate = useNavigate();
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
     useEffect(() => {
         fetchItemTypes();
@@ -20,7 +24,7 @@ const ShowAllItemTypes = () => {
             setItemType(data || []);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching items', error);
+            console.error(t("error_fetching_item_types"), error);
             setLoading(false);
         }
     }
@@ -33,36 +37,48 @@ const ShowAllItemTypes = () => {
             setItemIdForDelete(null);
             fetchItemTypes();
         } catch (err) {
-            console.error('Error deleting item', err);
+            console.error(t("error_deleting_item_type"), err);
         }
     };
 
 
-    if (loading) return <p>Loading items...</p>;
-    if (!itemTypes.length) return <p>No items found</p>;
+    if (loading) return <p>{t("loading")}</p>;
+    if (!itemTypes.length) return <p>{t("failed_load_item_types")}</p>;
 
     return (
         <div className="container">
-            <h1>All item types</h1>
+            <h1>{t("show_all_item_types")}</h1>
             <div className="button-group">
-                <Link to="/:lang/admin/item-types/add">
-                    <button style={{marginBottom: '20px'}}>Add New Item Type</button>
+                <Link to={`${prefix}/admin/item-types/add`}>
+                    <button style={{marginBottom: '20px'}}>{t("add_item_type")}</button>
                 </Link>
-                <Link to="/:lang/admin">
-                    <button style={{marginBottom: '20px'}}>← Back to main page</button>
+                <Link to={`${prefix}/admin`}>
+                    <button style={{marginBottom: '20px'}}>← {t("to_admin_page")}</button>
                 </Link>
+
+                <div className="lang-switcher">
+                    {SUPPORTED_LOCALES.map((locale) => (
+                        <button
+                            key={locale}
+                            style={{margin: '5px'}}
+                            onClick={() => changeLang(locale)}
+                        >
+                            {locale.toUpperCase()}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {itemTypes.map(itemType => (
                 <div key={itemType.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{itemType.title}</h3>
-                    <button onClick={() => navigate(`/:lang/admin/itemTypes/update/${itemType.id}`)}
+                    <button onClick={() => navigate(`${prefix}/admin/itemTypes/update/${itemType.id}`)}
                             style={{marginRight: '10px'}}>
-                        Update
+                        {t("update_item_type")}
                     </button>
 
                     <button onClick={() => setItemIdForDelete(itemType.id)}>
-                        Remove
+                        {t("remove_item_type")}
                     </button>
                 </div>
             ))}
@@ -85,9 +101,9 @@ const ShowAllItemTypes = () => {
                         borderRadius: '10px',
                         textAlign: 'center'
                     }}>
-                        <p>Are you sure you want to delete this item?</p>
-                        <button onClick={handleDelete} style={{marginRight: '10px'}}>Yes</button>
-                        <button onClick={() => setItemIdForDelete(null)}>Cancel</button>
+                        <p>{t("are_you_sure_you_want_to_delete_this_item_type")}</p>
+                        <button onClick={handleDelete} style={{marginRight: '10px'}}>{t("yes")}</button>
+                        <button onClick={() => setItemIdForDelete(null)}>{t("cancel")}</button>
                     </div>
                 </div>
             )}

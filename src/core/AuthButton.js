@@ -1,17 +1,21 @@
 import {useMsal, useIsAuthenticated} from "@azure/msal-react";
 import {apiRequest} from "../authConfig";
 import {useNavigate} from "react-router-dom";
+import {useLocale} from "./UseLocales";
 
 const AuthButton = () => {
     const {instance} = useMsal();
     const isAuthenticated = useIsAuthenticated();
     const navigate = useNavigate();
+    const {prefix} = useLocale();
 
     const handleLogin = async () => {
         try {
             const result = await instance.loginPopup(apiRequest);
-            const roles = result?.idTokenClaims?.roles || [];
-            navigate(roles.includes("admin") ? "/:lang/admin" : "/:lang/");
+            const payload = JSON.parse(atob(result.accessToken.split('.')[1]));
+            const roles = payload.roles ?? [];
+            sessionStorage.setItem('app.user.roles', JSON.stringify(roles));
+            navigate(roles.includes("admin") ? `${prefix}/admin` : `${prefix}/`);
         } catch (err) {
             console.error("Login failed", err);
         }
@@ -21,7 +25,8 @@ const AuthButton = () => {
         try {
             await instance.logoutPopup();
         } finally {
-            navigate("/:lang/");
+            sessionStorage.removeItem('app.user.roles');
+            navigate(`${prefix}/`);
         }
     };
 

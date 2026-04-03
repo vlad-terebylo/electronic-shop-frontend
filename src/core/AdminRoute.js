@@ -1,23 +1,12 @@
-import {useIsAuthenticated, useMsal} from "@azure/msal-react";
 import {Navigate} from "react-router-dom";
+import {useLocale} from "./UseLocales";
 
 const AdminRoute = ({children}) => {
-    const isAuthenticated = useIsAuthenticated();
-    const {accounts} = useMsal();
-    const account = accounts[0];
-
-    console.log(accounts);
-    console.log(isAuthenticated);
-
-    if (!isAuthenticated) {
-        return <Navigate to="/non-authorized" replace/>;
-    }
-
-    const roles = account.idTokenClaims?.roles ?? [];
-    console.log(roles);
+    const roles = JSON.parse(sessionStorage.getItem('app.user.roles') ?? '[]');
+    const {prefix} = useLocale();
 
     if (!roles.includes("admin")) {
-        return <Navigate to="/:lang/non-authorized" replace/>;
+        return <Navigate to={`${prefix}/non-authorized`} replace/>;
     }
 
     return children;

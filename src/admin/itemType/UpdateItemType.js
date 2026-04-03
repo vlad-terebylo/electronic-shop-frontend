@@ -1,6 +1,8 @@
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
 import apiClient from '../../core/ApiClient';
+import {useLocale} from "../../core/UseLocales";
+import {useTranslation} from "react-i18next";
 
 const UpdateItemType = () => {
     const {id} = useParams();
@@ -9,6 +11,8 @@ const UpdateItemType = () => {
     const [title, setItemTypeItem] = useState('');
     const [loading, setLoading] = useState(true);
     const [errors, setErrors] = useState([]);
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
     useEffect(() => {
         apiClient.get(`/itemTypes/${id}`)
@@ -17,7 +21,7 @@ const UpdateItemType = () => {
                 setLoading(false);
             })
             .catch(err => {
-                console.error('Error fetching item type', err);
+                console.error(t("error_fetching_item_types"), err);
                 setLoading(false);
             });
     }, [id]);
@@ -39,18 +43,18 @@ const UpdateItemType = () => {
 
         try {
             await apiClient.patch(`/admin/itemTypes/${id}`, {title});
-            navigate('/:lang/admin/item-types');
+            navigate(`${prefix}/admin/item-types`);
         } catch (err) {
-            console.error('Error updating item type', err);
-            alert('Failed to save changes');
+            console.error(t("error_updating_item_type"), err);
+            alert(t("error_saving_changes"));
         }
     };
 
-    if (loading) return <p>Loading item type...</p>;
+    if (loading) return <p>{t("loading")}</p>;
 
     return (
         <div className="container">
-            <h2>Update Item Type: {title}</h2>
+            <h2>{t("update_item_type")}: {title}</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -60,10 +64,22 @@ const UpdateItemType = () => {
                 />
                 {errors.title && <p style={{color: 'red'}}>{errors.title}</p>}
                 <div>
-                    <button type="submit" style={{marginRight: '10px'}}>Save Changes</button>
-                    <button type="button" onClick={() => navigate(-1)}>← Back</button>
+                    <button type="submit" style={{marginRight: '10px'}}>{t("save")}</button>
+                    <button type="button"
+                            onClick={() => navigate(`${prefix}/admin/item-types`)}>← {t("home")}</button>
                 </div>
             </form>
+            <div className="lang-switcher">
+                {SUPPORTED_LOCALES.map((locale) => (
+                    <button
+                        key={locale}
+                        style={{margin: '5px'}}
+                        onClick={() => changeLang(locale)}
+                    >
+                        {locale.toUpperCase()}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };

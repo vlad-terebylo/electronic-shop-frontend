@@ -6,6 +6,7 @@ import {addToCart} from "../cart/CartService";
 import CartPopup from "../cart/CartPopup";
 import AddToCartPopup from "../cart/AddToCartPopup";
 import {useTranslation} from "react-i18next";
+import {useLocale} from "../../core/UseLocales";
 
 
 const ShowAllItems = () => {
@@ -16,6 +17,7 @@ const ShowAllItems = () => {
     const [popupItem, setPopupItem] = useState(null);
     const [popupMessage, setPopupMessage] = useState(null);
     const {t} = useTranslation();
+    const {prefix} = useLocale();
 
 
     useEffect(() => {
@@ -51,13 +53,13 @@ const ShowAllItems = () => {
 
     const handleAddToCart = (item, quantity) => {
         const result = addToCart(item, quantity);
-        if (result === false) alert(t("updated_quantity") `${item.title}`);
-        else if (result === "exceed") alert(t("cannot_add_more_than")`${item.quantity}`);
+        if (result === false) alert(`${t("updated_quantity")} ${item.title}`);
+        else if (result === "exceed") alert(` ${t("cannot_add_more_than")} ${item.quantity}`);
     };
 
     const closePopup = () => setPopupMessage(null);
 
-    if (loading) return <p>Loading items...</p>;
+    if (loading) return <p>{t("loading")}</p>;
     if (error) return <p style={{color: "red"}}>{error}</p>;
 
     return (
@@ -76,7 +78,7 @@ const ShowAllItems = () => {
                         {t("add")}
                     </button>
 
-                    <Link to={`/:lang/items/${item.id}`}>
+                    <Link to={`${prefix}/items/${item.id}`}>
                         <button style={{marginLeft: '5px'}}>{t("detail")}</button>
                     </Link>
                 </div>

@@ -1,12 +1,16 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import apiClient from '../../core/ApiClient';
 import {useNavigate} from 'react-router-dom';
 import '../../App.css';
+import {useTranslation} from "react-i18next";
+import {useLocale} from "../../core/UseLocales";
 
 const AddNewItemType = () => {
     const [title, setTitle] = useState('');
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
     const validate = () => {
         const newErrors = {};
@@ -23,17 +27,16 @@ const AddNewItemType = () => {
         if (!title.trim()) return;
         try {
             await apiClient.post('/admin/itemTypes', {title});
-            console.log('ItemType added:', title);
             setTitle('');
-            navigate('/:lang/admin/item-types');
+            navigate(`${prefix}/admin/item-types`);
         } catch (err) {
-            console.error('Error adding item type:', err);
+            console.error(t("error_adding_item_type"), err);
         }
     };
 
     return (
         <div className="container">
-            <h2>Add New Item Type</h2>
+            <h2>{t("add_item_type")}</h2>
             <input
                 type="text"
                 placeholder="Item type title"
@@ -45,11 +48,23 @@ const AddNewItemType = () => {
 
             <div>
                 <button onClick={handleAddItemType} style={{marginRight: '10px'}}>
-                    Add Type
+                    {t("add_item_type")}
                 </button>
-                <button onClick={() => navigate(-1)}>
-                    ← Home
+                <button onClick={() => navigate(`${prefix}/admin/item-types`)}>
+                    ← {t("home")}
                 </button>
+            </div>
+
+            <div className="lang-switcher">
+                {SUPPORTED_LOCALES.map((locale) => (
+                    <button
+                        key={locale}
+                        style={{margin: '5px'}}
+                        onClick={() => changeLang(locale)}
+                    >
+                        {locale.toUpperCase()}
+                    </button>
+                ))}
             </div>
         </div>
     );

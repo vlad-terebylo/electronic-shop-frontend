@@ -1,6 +1,8 @@
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import apiClient from '../../core/ApiClient';
+import {useTranslation} from 'react-i18next';
+import {useLocale} from "../../core/UseLocales";
 
 
 const AddNewItem = () => {
@@ -14,6 +16,9 @@ const AddNewItem = () => {
     const [itemTypes, setItemTypes] = useState([]);
     const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
+
 
     useEffect(() => {
         apiClient.get('/itemTypes')
@@ -24,12 +29,12 @@ const AddNewItem = () => {
     const validate = () => {
         const newErrors = {};
 
-        if (!title || !title.trim()) newErrors.title = 'Title is required';
-        if (!price || isNaN(price) || parseInt(price) <= 0) newErrors.price = 'Price must be a positive number';
-        if (!producingYear) newErrors.producingYear = 'Producing year is required';
-        if (!manufacturer || !manufacturer.trim()) newErrors.manufacturer = 'Manufacturer is required';
-        if (!quantity || isNaN(quantity) || parseInt(quantity) <= 0) newErrors.quantity = 'Quantity must be a positive number';
-        if (!itemTypeId) newErrors.itemTypeId = 'Please select an item type';
+        if (!title || !title.trim()) newErrors.title = t("required");
+        if (!price || isNaN(price) || parseInt(price) <= 0) newErrors.price = t("required");
+        if (!producingYear) newErrors.producingYear = t("required");
+        if (!manufacturer || !manufacturer.trim()) newErrors.manufacturer = t("required");
+        if (!quantity || isNaN(quantity) || parseInt(quantity) <= 0) newErrors.quantity = t("only_positive_quantity");
+        if (!itemTypeId) newErrors.itemTypeId = t("required");
 
         setErrors(newErrors);
 
@@ -55,17 +60,17 @@ const AddNewItem = () => {
             setManufacturer('');
             setQuantity('');
             setItemTypeId('');
-            navigate('/:lang/admin')
+            navigate(`${prefix}/admin`)
         } catch (error
             ) {
             console.log("Error - ", error);
-            alert("Failed to add new item");
+            alert(t("failed_to_add_new_item"));
         }
     };
 
     return (
         <div className="container">
-            <h2>Add item</h2>
+            <h2>{t("add_item")}</h2>
             <input
                 type="text"
                 placeholder="title"
@@ -112,7 +117,7 @@ const AddNewItem = () => {
             <p></p>
 
             <select value={itemTypeId} onChange={e => setItemTypeId(e.target.value)}>
-                <option value="">Select Item Type</option>
+                <option value="">{t("select_item_type")}</option>
                 {itemTypes.map(type => (
                     <option key={type.id} value={type.id}>{type.title}</option>
                 ))}
@@ -120,10 +125,22 @@ const AddNewItem = () => {
             {errors.itemTypeId && <p style={{color: 'red'}}>{errors.itemTypeId}</p>}
             <p></p>
 
-            <button onClick={handleAddItem}>Add new item</button>
-            <button onClick={() => navigate(-1)} style={{margin: '10px'}}>
-                ← Home
+            <button onClick={handleAddItem}>{t("add_item")}</button>
+            <button onClick={() => navigate(`${prefix}/admin`)} style={{margin: '10px'}}>
+                ← {t("home")}
             </button>
+
+            <div className="lang-switcher">
+                {SUPPORTED_LOCALES.map((locale) => (
+                    <button
+                        key={locale}
+                        style={{margin: '5px'}}
+                        onClick={() => changeLang(locale)}
+                    >
+                        {locale.toUpperCase()}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };

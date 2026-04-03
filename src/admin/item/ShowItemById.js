@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import apiClient from '../../core/ApiClient';
 import {useParams, useNavigate} from 'react-router-dom';
 import {useTranslation} from "react-i18next";
+import {useLocale} from "../../core/UseLocales";
 
 
 const ShowItemById = () => {
@@ -12,7 +13,8 @@ const ShowItemById = () => {
     const [itemTypeTitle, setItemTypeTitle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
 
     const formatDate = (producingYear) => {
@@ -55,12 +57,21 @@ const ShowItemById = () => {
                 <li><strong>{t("manufacturer")}:</strong> {item.manufacturer}</li>
                 <li><strong>{t("type")}:</strong> {itemTypeTitle}</li>
             </ul>
-            <button onClick={() => navigate(-1)} className="button-group">
+            <button onClick={() => navigate(`${prefix}/admin`)} className="button-group">
                 ← {t("home")}
             </button>
 
-            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
-            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
+            <div className="lang-switcher">
+                {SUPPORTED_LOCALES.map((locale) => (
+                    <button
+                        key={locale}
+                        style={{margin: '5px'}}
+                        onClick={() => changeLang(locale)}
+                    >
+                        {locale.toUpperCase()}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };

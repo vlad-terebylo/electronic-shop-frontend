@@ -1,33 +1,59 @@
 import { useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+const DEFAULT_LOCALE = "en";
 const SUPPORTED_LOCALES = ["en", "cz"];
+
+// получаем префикс для URL
+const getLocalePrefix = (locale) => {
+    return locale === DEFAULT_LOCALE ? "" : `/${locale}`;
+};
 
 export const useLocale = () => {
     const { i18n } = useTranslation();
-    const { lang } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
-        if (!lang || !SUPPORTED_LOCALES.includes(lang)) {
-            // редирект на дефолтный язык (например, английский)
-            const path = location.pathname.split("/").slice(2).join("/");
-            navigate(`/en/${path}`, { replace: true });
+        const segments = location.pathname.split("/");
+        const maybeLang = segments[1];
+
+        if (SUPPORTED_LOCALES.includes(maybeLang)) {
+            if (i18n.language !== maybeLang) {
+                i18n.changeLanguage(maybeLang);
+            }
             return;
         }
 
-        if (i18n.language !== lang) {
-            i18n.changeLanguage(lang);
+        if (i18n.language !== DEFAULT_LOCALE) {
+            i18n.changeLanguage(DEFAULT_LOCALE);
         }
-    }, [lang, i18n, navigate, location]);
+
+    }, [location.pathname, i18n]);
 
     const changeLang = (newLang) => {
-        if (!SUPPORTED_LOCALES.includes(newLang)) return; // защитный фильтр
-        const path = location.pathname.split("/").slice(2).join("/");
-        navigate(`/${newLang}/${path}`);
+        if (!SUPPORTED_LOCALES.includes(newLang)) return;
+
+        const segments = location.pathname.split("/");
+        let pathWithoutLang = location.pathname;
+
+        if (SUPPORTED_LOCALES.includes(segments[1])) {
+            pathWithoutLang = "/" + segments.slice(2).join("/");
+        }
+
+        const prefix = getLocalePrefix(newLang);
+
+        navigate(`${prefix}${pathWithoutLang}`);
     };
 
-    return { lang: i18n.language, changeLang, SUPPORTED_LOCALES };
+    const currentLang = i18n.language || DEFAULT_LOCALE;
+    const prefix = getLocalePrefix(currentLang);
+
+    return {
+        lang: currentLang,
+        changeLang,
+        SUPPORTED_LOCALES,
+        prefix
+    };
 };

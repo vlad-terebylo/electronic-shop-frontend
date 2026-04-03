@@ -8,8 +8,10 @@ import {useLocale} from "../core/UseLocales";
 
 const MainPage = () => {
 
+    const roles = JSON.parse(sessionStorage.getItem('app.user.roles') || '[]');
+    const isAdmin = roles.includes("admin");
     const {t} = useTranslation();
-    const {changeLang, SUPPORTED_LOCALES} = useLocale();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
     return (
         <div className="container">
@@ -17,9 +19,15 @@ const MainPage = () => {
 
             <AuthButton/>
 
-            <Link to={`/${SUPPORTED_LOCALES[0]}/items/cart`}>
+            <Link to={`${prefix}/items/cart`}>
                 <button style={{margin: '5px'}}>{t('cart_btn')}</button>
             </Link>
+
+            {isAdmin && (
+                <Link to={`${prefix}/admin`}>
+                    <button style={{margin: '5px'}}>{t("to_admin_page")}</button>
+                </Link>
+            )}
 
             <div className="lang-switcher">
                 {SUPPORTED_LOCALES.map((locale) => (

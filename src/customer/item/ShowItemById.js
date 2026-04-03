@@ -5,6 +5,7 @@ import {addToCart} from "../cart/CartService";
 import CartPopup from "../cart/CartPopup";
 import AddToCartPopup from "../cart/AddToCartPopup";
 import {useTranslation} from "react-i18next";
+import {useLocale} from "../../core/UseLocales";
 
 
 const ShowItemByIdU = () => {
@@ -17,8 +18,8 @@ const ShowItemByIdU = () => {
     const [error, setError] = useState(null);
     const [popupItem, setPopupItem] = useState(null);
     const [popupMessage, setPopupMessage] = useState(null);
-    const {t, i18n} = useTranslation();
-
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
     const formatDate = (producingYear) => {
         return producingYear[2] + ' / ' + producingYear[1] + ' / ' + producingYear[0];
@@ -51,13 +52,13 @@ const ShowItemByIdU = () => {
 
     const handleAddToCart = (item, quantity) => {
         const result = addToCart(item, quantity);
-        if (result === false) alert(`Updated quantity for ${item.title} in cart`);
-        else if (result === "exceed") alert(`Cannot add more than ${item.quantity} items`);
+        if (result === false) alert(`${t("updated_quantity")} ${item.title}`);
+        else if (result === "exceed") alert(`${t("cannot_add_more_than")} ${item.quantity}`);
     };
 
     const closePopup = () => setPopupMessage(null);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>{t("loading")}</p>;
     if (error) return <p>{error}</p>;
     return (
         <div className="container">
@@ -70,15 +71,24 @@ const ShowItemByIdU = () => {
                 <li><strong>{t("manufacturer")}:</strong> {item.manufacturer}</li>
                 <li><strong>{t("type")}:</strong> {itemTypeTitle}</li>
             </ul>
-            <button onClick={() => navigate(-1)} className="button-group">
+            <button onClick={() => navigate(`${prefix}/`)} className="button-group">
                 ← {t("home")}
             </button>
             <button onClick={() => handleAddClick(item)} className="button-group">
                 {t("add")}
             </button>
 
-            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
-            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
+            <div className="lang-switcher">
+                {SUPPORTED_LOCALES.map((locale) => (
+                    <button
+                        key={locale}
+                        style={{margin: '5px'}}
+                        onClick={() => changeLang(locale)}
+                    >
+                        {locale.toUpperCase()}
+                    </button>
+                ))}
+            </div>
 
 
             {popupItem && (

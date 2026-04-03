@@ -2,12 +2,14 @@ import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {getCart, removeFromCart, clearCart, updateCartItemQuantity} from "./CartService";
 import {useTranslation} from "react-i18next";
+import {useLocale} from "../../core/UseLocales";
 
 const ShowCart = () => {
     const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState(0);
     const [cartItems, setCartItems] = useState([]);
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
 
     useEffect(() => {
@@ -41,7 +43,7 @@ const ShowCart = () => {
         if (!newQty || newQty < 1) {
             item.quantity = 1;
         } else if (newQty > item.stock) {
-            alert(`Cannot exceed available stock (${item.stock})`);
+            alert(t("cannot_exceed_available_stock")`(${item.stock})`);
             return;
         } else {
             item.quantity = newQty;
@@ -52,7 +54,7 @@ const ShowCart = () => {
     };
 
     const handlePurchase = () => {
-        navigate('/:lang/items/cart/purchase');
+        navigate(`${prefix}/items/cart/purchase`);
     };
 
     return (
@@ -89,7 +91,7 @@ const ShowCart = () => {
                         marginTop: '15px',
                         paddingTop: '10px'
                     }}>
-                        <h2>Total price: {totalPrice}</h2>
+                        <h2>{t("total_price")}: {totalPrice}</h2>
                     </div>
 
                     <button
@@ -104,9 +106,19 @@ const ShowCart = () => {
                 </>
             )}
 
-            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
-            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
-            <button onClick={() => navigate("/:lang/")} className="button-group">
+            <div className="lang-switcher">
+                {SUPPORTED_LOCALES.map((locale) => (
+                    <button
+                        key={locale}
+                        style={{margin: '5px'}}
+                        onClick={() => changeLang(locale)}
+                    >
+                        {locale.toUpperCase()}
+                    </button>
+                ))}
+            </div>
+
+            <button onClick={() => navigate(`${prefix}/`)} className="button-group">
                 ← {t("home")}
             </button>
         </div>

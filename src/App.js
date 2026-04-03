@@ -6,7 +6,7 @@ import ShowItemByIdU from "./customer/item/ShowItemById";
 import UpdateItem from "./admin/item/UpdateItem";
 import AddNewItemType from "./admin/itemType/AddNewItemType";
 import ShowAllItemTypes from "./admin/itemType/ShowAllItemTypes"
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import UpdateItemType from "./admin/itemType/UpdateItemType";
 import PurchasesPage from "./admin/purchase/GetPurchasedItems";
 import MainPage from "./customer/MainPage";
@@ -23,26 +23,48 @@ import AdminRoute from "./core/AdminRoute";
 function App() {
     return (
         <Router>
-            <div>
-                <Routes>
-                    <Route path="/:lang/admin" element={<AdminRoute><AdminPage/></AdminRoute>}/>
-                    <Route path="/:lang/admin/items/:id" element={<AdminRoute><ShowItemById/></AdminRoute>}/>
-                    <Route path="/:lang/admin/items/add" element={<AdminRoute><AddNewItem/></AdminRoute>}/>
-                    <Route path="/:lang/admin/item-types/add" element={<AdminRoute><AddNewItemType/></AdminRoute>}/>
-                    <Route path="/:lang/admin/items/update/:id" element={<AdminRoute><UpdateItem/></AdminRoute>}/>
-                    <Route path="/:lang/admin/itemTypes/update/:id" element={<AdminRoute><UpdateItemType/></AdminRoute>}/>
-                    <Route path="/:lang/admin/item-types" element={<AdminRoute><ShowAllItemTypes/></AdminRoute>}/>
-                    <Route path="/:lang/admin/purchases" element={<AdminRoute><PurchasesPage/></AdminRoute>}/>
+            <Routes>
 
-                    <Route path="/:lang/" element={<MainPage/>}/>
-                    <Route path="/:lang/items/:id" element={<ShowItemByIdU/>}/>
-                    <Route path="/:lang/items/cart" element={<ShowCart/>}/>
-                    <Route path="/:lang/items/cart/purchase" element={<ProtectedRoute><PurchasePage/></ProtectedRoute>}/>
-                    <Route path="/:lang/login" element={<LoginPage/>}/>
-                    <Route path="/:lang/signUp" element={<SignUpPage/>}/>
-                    <Route path="/:lang/non-authorized" element={<UnauthorizedPage/>}/>
-                </Routes>
-            </div>
+                <Route path="/" element={<MainPage/>}/>
+                <Route path="/items/:id" element={<ShowItemByIdU/>}/>
+                <Route path="/items/cart" element={<ShowCart/>}/>
+                <Route path="/items/cart/purchase" element={<ProtectedRoute><PurchasePage/></ProtectedRoute>}/>
+                <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/signUp" element={<SignUpPage/>}/>
+                <Route path="/non-authorized" element={<UnauthorizedPage/>}/>
+
+                <Route path="/admin" element={<AdminRoute><AdminPage/></AdminRoute>}/>
+                <Route path="/admin/items/:id" element={<AdminRoute><ShowItemById/></AdminRoute>}/>
+                <Route path="/admin/items/add" element={<AdminRoute><AddNewItem/></AdminRoute>}/>
+                <Route path="/admin/items/update/:id" element={<AdminRoute><UpdateItem/></AdminRoute>}/>
+                <Route path="/admin/item-types/add" element={<AdminRoute><AddNewItemType/></AdminRoute>}/>
+                <Route path="/admin/itemTypes/update/:id" element={<AdminRoute><UpdateItemType/></AdminRoute>}/>
+                <Route path="/admin/item-types" element={<AdminRoute><ShowAllItemTypes/></AdminRoute>}/>
+                <Route path="/admin/purchases" element={<AdminRoute><PurchasesPage/></AdminRoute>}/>
+
+
+                <Route path="/:lang">
+                    <Route index element={<MainPage/>}/>
+                    <Route path="items/:id" element={<ShowItemByIdU/>}/>
+                    <Route path="items/cart" element={<ShowCart/>}/>
+                    <Route path="items/cart/purchase" element={<ProtectedRoute><PurchasePage/></ProtectedRoute>}/>
+                    <Route path="login" element={<LoginPage/>}/>
+                    <Route path="signUp" element={<SignUpPage/>}/>
+                    <Route path="non-authorized" element={<UnauthorizedPage/>}/>
+
+                    <Route path="admin" element={<AdminRoute><AdminPage/></AdminRoute>}/>
+                    <Route path="admin/items/:id" element={<AdminRoute><ShowItemById/></AdminRoute>}/>
+                    <Route path="admin/items/add" element={<AdminRoute><AddNewItem/></AdminRoute>}/>
+                    <Route path="admin/items/update/:id" element={<AdminRoute><UpdateItem/></AdminRoute>}/>
+                    <Route path="admin/item-types/add" element={<AdminRoute><AddNewItemType/></AdminRoute>}/>
+                    <Route path="admin/itemTypes/update/:id" element={<AdminRoute><UpdateItemType/></AdminRoute>}/>
+                    <Route path="admin/item-types" element={<AdminRoute><ShowAllItemTypes/></AdminRoute>}/>
+                    <Route path="admin/purchases" element={<AdminRoute><PurchasesPage/></AdminRoute>}/>
+                </Route>
+
+                <Route path="/en/*" element={<Navigate to="/" replace />} />
+
+            </Routes>
         </Router>
     );
 }

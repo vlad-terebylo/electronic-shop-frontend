@@ -4,6 +4,7 @@ import SearchItemById from "./SearchItemById";
 import SearchItemByTitle from "../../core/SearchItemByTitle";
 import apiClient from '../../core/ApiClient';
 import {useTranslation} from "react-i18next";
+import {useLocale} from "../../core/UseLocales";
 
 
 const ShowAllItems = () => {
@@ -15,6 +16,7 @@ const ShowAllItems = () => {
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const {t} = useTranslation();
+    const {SUPPORTED_LOCALES, prefix} = useLocale();
 
     useEffect(() => {
         fetchItems();
@@ -25,7 +27,6 @@ const ShowAllItems = () => {
             const res = await apiClient.get('/items');
             const data = Array.isArray(res.data) ? res.data : res.data.items;
             setItems(data || []);
-            console.log(res.data);
             setLoading(false);
         } catch (err) {
             console.error(t("error_fetching_item"), err);
@@ -58,26 +59,26 @@ const ShowAllItems = () => {
         if (id == null) return;
 
         try {
-            await apiClient.delete(`/:lang/admin/items/${id}`);
+            await apiClient.delete(`/admin/items/${id}`);
             setItemId(null);
             fetchItems();
         } catch (err) {
-            console.error('Error deleting item', err);
+            console.error(t("error_deleting_item"), err.response?.data || err.message);
         }
     };
 
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            await apiClient.put(`/:lang/admin/items/${editingItem.id}`, editingItem);
+            await apiClient.put(`/admin/items/${editingItem.id}`, editingItem);
             setEditingItem(null);
             fetchItems();
         } catch (err) {
-            console.error('Error updating item', err);
+            console.error(t("error_updating_item"), err);
         }
     };
 
-    if (loading) return <p>Loading items...</p>;
+    if (loading) return <p>{t("loading")}</p>;
     if (error) return <p style={{color: "red"}}>{error}</p>;
 
     return (
@@ -91,31 +92,32 @@ const ShowAllItems = () => {
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{item.title || item.name}</h3>
                     <p>Id: {item.id}</p>
-                    <p>Price: {item.price}</p>
-                    <p>Quantity: {item.quantity}</p>
-                    <p>Manufacturer: {item.manufacturer}</p>
+                    <p>{t("price")}: {item.price}</p>
+                    <p>{t("quantity")}: {item.quantity}</p>
+                    <p>{t("manufacturer")}: {item.manufacturer}</p>
 
-                    <Link to={`/:lang/admin/items/${item.id}`}>
+                    <Link to={`${prefix}/admin/items/${item.id}`}>
                         <button>{t("detail")}</button>
                     </Link>
-                    <button onClick={() => navigate(`/admin/items/update/${item.id}`)} style={{marginLeft: '5px'}}>
-                        Update info
+                    <button onClick={() => navigate(`${prefix}/admin/items/update/${item.id}`)}
+                            style={{marginLeft: '5px'}}>
+                        {t("update_item")}
                     </button>
                     <button onClick={() => setItemId(item.id)} style={{marginLeft: '5px'}}>
-                        Remove item
+                        {t("remove_item")}
                     </button>
                 </div>
             ))}
 
             {filteredItems && (
                 <button onClick={() => setFilteredItems(null)} style={{marginBottom: "15px"}}>
-                    Show All Items
+                    {t("all_items")}
                 </button>
             )}
 
             {editingItem && (
                 <div style={{border: '2px solid blue', padding: '15px', marginTop: '20px'}}>
-                    <h2>Update Item: {editingItem.title || editingItem.name}</h2>
+                    <h2>{t("update_item")}: {editingItem.title || editingItem.name}</h2>
                     <form onSubmit={handleUpdateSubmit}>
                         <input
                             type="text"
@@ -140,7 +142,7 @@ const ShowAllItems = () => {
                         />
                         <button type="submit">Save Changes</button>
                         <button type="button" onClick={() => setEditingItem(null)} style={{marginLeft: '10px'}}>
-                            Cancel
+                            {t("cancel")}
                         </button>
                     </form>
                 </div>
@@ -164,9 +166,9 @@ const ShowAllItems = () => {
                         borderRadius: '10px',
                         textAlign: 'center'
                     }}>
-                        <p>Are you sure you want to delete this item?</p>
-                        <button onClick={handleDelete} style={{marginRight: '10px'}}>Yes</button>
-                        <button onClick={() => setItemId(null)}>Cancel</button>
+                        <p>{t("are_you_sure_you_want_to_delete_this_item")}</p>
+                        <button onClick={handleDelete} style={{marginRight: '10px'}}>{t("yes")}</button>
+                        <button onClick={() => setItemId(null)}>{t("cancel")}</button>
                     </div>
                 </div>
             )}

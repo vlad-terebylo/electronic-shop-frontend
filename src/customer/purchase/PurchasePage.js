@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import apiClient from '../../core/ApiClient';
 import {useTranslation} from "react-i18next";
+import {useLocale} from "../../core/UseLocales";
 
 const PurchasePage = () => {
     const navigate = useNavigate();
@@ -11,7 +12,8 @@ const PurchasePage = () => {
     const [cardNumber, setCardNumber] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -56,11 +58,11 @@ const PurchasePage = () => {
             setCartItems([]);
             setTotalPrice(0);
 
-            alert('Purchase successful');
-            navigate('/:lang/');
+            alert(t("purchase_successful"));
+            navigate(`${prefix}/`);
         } catch (err) {
             console.error(err);
-            setError('Failed to complete purchase');
+            setError(t("failed_to_complete_purchase"));
         } finally {
             setLoading(false);
         }
@@ -70,14 +72,24 @@ const PurchasePage = () => {
         <div className="container">
             <h1>{t("make_purchase")}</h1>
 
-            <button onClick={() => navigate('/:lang/items/cart')} style={{margin: '5px'}}>
+            <button onClick={() => navigate(`${prefix}/items/cart`)} style={{margin: '5px'}}>
                 {t("cart_btn")}
             </button>
-            <button onClick={() => navigate('/:lang/')} style={{margin: '5px'}}>
+            <button onClick={() => navigate(`${prefix}/`)} style={{margin: '5px'}}>
                 {t("home")}
             </button>
-            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('en')}>EN</button>
-            <button style={{margin: '5px'}} onClick={() => i18n.changeLanguage('cz')}>CZ</button>
+
+            <div className="lang-switcher">
+                {SUPPORTED_LOCALES.map((locale) => (
+                    <button
+                        key={locale}
+                        style={{margin: '5px'}}
+                        onClick={() => changeLang(locale)}
+                    >
+                        {locale.toUpperCase()}
+                    </button>
+                ))}
+            </div>
 
             {cartItems.map(item => (
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>

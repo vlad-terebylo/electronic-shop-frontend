@@ -1,6 +1,8 @@
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
 import apiClient from '../../core/ApiClient';
+import {useLocale} from "../../core/UseLocales";
+import {useTranslation} from "react-i18next";
 
 const UpdateItem = () => {
     const {id} = useParams();
@@ -10,6 +12,8 @@ const UpdateItem = () => {
     const [itemTypes, setItemTypes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [errors, setErrors] = useState([]);
+    const {t} = useTranslation();
+    const {changeLang, SUPPORTED_LOCALES,prefix} = useLocale();
 
     useEffect(() => {
         apiClient.get(`/items/${id}`)
@@ -33,12 +37,12 @@ const UpdateItem = () => {
     const validate = () => {
         const newErrors = {};
 
-        if (!item.title || !item.title.trim()) newErrors.title = 'Title is required';
+        if (!item.title || !item.title.trim()) newErrors.title = t("required");
         if (!item.price || isNaN(item.price) || parseInt(item.price) <= 0)
-            newErrors.price = 'Price must be a positive number';
+            newErrors.price = t("only_positive_price");
         if (!item.quantity || isNaN(item.quantity) || parseInt(item.quantity) <= 0)
-            newErrors.quantity = 'Quantity must be a positive number';
-        if (!item.itemTypeId) newErrors.itemTypeId = 'Please select an item type';
+            newErrors.quantity = t("only_positive_quantity");
+        if (!item.itemTypeId) newErrors.itemTypeId = t("required");
 
 
         setErrors(newErrors);
@@ -53,19 +57,19 @@ const UpdateItem = () => {
 
         try {
             await apiClient.put(`/admin/items/${id}`, item);
-            navigate('/:lang/admin');
+            navigate(`${prefix}/admin`);
         } catch (err) {
-            console.error('Error updating item', err);
-            alert('Failed to save changes')
+            console.error(t("error_updating_item"), err);
+            alert(t("error_saving_changes"))
         }
     };
 
-    if (loading) return <p>Loading item...</p>;
-    if (!item) return <p>Item not found</p>;
+    if (loading) return <p>{t("loading")}</p>;
+    if (!item) return <p>{t("failed_load_item")}</p>;
 
     return (
         <div className="container">
-            <h2>Update Item: {item.title}</h2>
+            <h2>{t("update_item")}: {item.title}</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -93,7 +97,7 @@ const UpdateItem = () => {
 
                 <select value={item.itemTypeId}
                         onChange={e => setItem({...item, itemTypeId: parseInt(e.target.value)})}>
-                    <option value="">Select Item Type</option>
+                    <option value="">{t("select_item_type")}</option>
                     {itemTypes.map(type => (
                         <option key={type.id} value={type.id}>{type.title}</option>
                     ))}
@@ -101,11 +105,23 @@ const UpdateItem = () => {
                 {errors.itemTypeId && <p style={{color: 'red'}}>{errors.itemTypeId}</p>}
                 <p></p>
 
-                <button type="submit">Save Changes</button>
-                <button type="button" onClick={() => navigate(-1)} style={{marginLeft: '10px'}}>
-                    ← Home
+                <button type="submit">{t("save")}</button>
+                <button type="button" onClick={() => navigate(`${prefix}/admin`)} style={{marginLeft: '10px'}}>
+                    ← {t("home")}
                 </button>
             </form>
+
+            <div className="lang-switcher">
+                {SUPPORTED_LOCALES.map((locale) => (
+                    <button
+                        key={locale}
+                        style={{margin: '5px'}}
+                        onClick={() => changeLang(locale)}
+                    >
+                        {locale.toUpperCase()}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };

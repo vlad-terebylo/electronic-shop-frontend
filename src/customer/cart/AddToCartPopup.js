@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
+import {useTranslation} from "react-i18next";
 
-const AddToCartPopup = ({ item, onClose, onAdd }) => {
+const AddToCartPopup = ({item, onClose, onAdd}) => {
     const [quantity, setQuantity] = useState(1);
     const [error, setError] = useState(null);
+    const [t] = useTranslation();
 
     const handleAdd = () => {
         if (quantity <= 0) {
-            setError("Quantity must be at least 1");
+            setError(t("quantity_must_me_more_than_one"));
             return;
         }
         if (quantity > item.quantity) {
-            setError(`Cannot add more than ${item.quantity} items`);
+            setError(` ${t("cannot_add_more_than")} ${item.quantity}`);
             return;
         }
 
@@ -39,7 +41,7 @@ const AddToCartPopup = ({ item, onClose, onAdd }) => {
                 textAlign: "center"
             }}>
                 <h3>{item.title}</h3>
-                <p>Quantity in storage: {item.quantity}</p>
+                <p>{t("quantity")}: {item.quantity}</p>
 
                 <input
                     type="number"
@@ -47,16 +49,16 @@ const AddToCartPopup = ({ item, onClose, onAdd }) => {
                     max={item.quantity}
                     value={quantity}
                     onChange={e => setQuantity(parseInt(e.target.value))}
-                    style={{ width: "60px", marginBottom: "10px" }}
+                    style={{width: "60px", marginBottom: "10px"}}
                 />
-                {error && <p style={{ color: "red" }}>{error}</p>}
+                {error && <p style={{color: "red"}}>{error}</p>}
 
                 <div>
-                    <button onClick={handleAdd} style={{ marginRight: "10px" }}>
-                        Add to Cart
+                    <button onClick={handleAdd} style={{marginRight: "10px"}}>
+                        {t("add")}
                     </button>
-                    <button onClick={onClose} style={{ color: "red" }}>
-                        Cancel
+                    <button onClick={onClose} style={{color: "red"}}>
+                        {t("cancel")}
                     </button>
                 </div>
             </div>
