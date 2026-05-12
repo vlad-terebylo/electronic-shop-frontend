@@ -3,7 +3,6 @@ import publicApiClient from '../../core/PublicApiClient';
 import {Link} from 'react-router-dom';
 import SearchItemByTitle from "../../core/SearchItemByTitle";
 import {addToCart} from "../cart/CartService";
-import CartPopup from "../cart/CartPopup";
 import AddToCartPopup from "../cart/AddToCartPopup";
 import {useTranslation} from "react-i18next";
 import {useLocale} from "../../core/UseLocales";
@@ -15,7 +14,6 @@ const ShowAllItems = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [popupItem, setPopupItem] = useState(null);
-    const [popupMessage, setPopupMessage] = useState(null);
     const {t} = useTranslation();
     const {prefix} = useLocale();
 
@@ -57,8 +55,6 @@ const ShowAllItems = () => {
         else if (result === "exceed") alert(` ${t("cannot_add_more_than")} ${item.quantity}`);
     };
 
-    const closePopup = () => setPopupMessage(null);
-
     if (loading) return <p>{t("loading")}</p>;
     if (error) return <p style={{color: "red"}}>{error}</p>;
 
@@ -70,8 +66,8 @@ const ShowAllItems = () => {
             {(filteredItems || items).map(item => (
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{item.title || item.name}</h3>
-                    <p>{t("price")}: {item.price}</p>
-                    <p>{t("quantity")}: {item.quantity}</p>
+                    <p>{t("price")}: ${item.price}</p>
+                    <p>{t("availability")}: {item.quantity > 0 ? t("in_stock") : t("not_in_stock")}</p>
                     <p>{t("manufacturer")}: {item.manufacturer}</p>
 
                     <button onClick={() => handleAddClick(item)} style={{marginLeft: '5px'}}>
@@ -97,8 +93,6 @@ const ShowAllItems = () => {
                     onAdd={handleAddToCart}
                 />
             )}
-
-            {popupMessage && <CartPopup message={popupMessage} onClose={closePopup}/>}
         </div>
     );
 };

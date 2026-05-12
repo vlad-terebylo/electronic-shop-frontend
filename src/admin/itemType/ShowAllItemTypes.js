@@ -3,12 +3,13 @@ import apiClient from '../../core/ApiClient';
 import {Link, useNavigate} from 'react-router-dom';
 import '../../App.css';
 import {useLocale} from "../../core/UseLocales";
+import ConfirmPopup from "../../core/ConfirmPopup";
 import {useTranslation} from "react-i18next";
 
 const ShowAllItemTypes = () => {
     const [itemTypes, setItemType] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [id, setItemIdForDelete] = useState(null);
+    const [itemTypeId, setItemIdForDelete] = useState(null);
     const navigate = useNavigate();
     const {t} = useTranslation();
     const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
@@ -30,15 +31,20 @@ const ShowAllItemTypes = () => {
     }
 
     const handleDelete = async () => {
-        if (id == null) return;
+        if (itemTypeId == null) return;
 
         try {
-            await apiClient.delete(`/admin/itemTypes/${id}`);
+            await apiClient.delete(`/admin/itemTypes/${itemTypeId}`);
             setItemIdForDelete(null);
             fetchItemTypes();
         } catch (err) {
             console.error(t("error_deleting_item_type"), err);
         }
+    };
+
+    const handleDeleteConfirm = async () => {
+        await handleDelete(itemTypeId);
+        setItemIdForDelete(null);
     };
 
 
@@ -83,29 +89,12 @@ const ShowAllItemTypes = () => {
                 </div>
             ))}
 
-            {id && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <div style={{
-                        background: 'white',
-                        padding: '30px',
-                        borderRadius: '10px',
-                        textAlign: 'center'
-                    }}>
-                        <p>{t("are_you_sure_you_want_to_delete_this_item_type")}</p>
-                        <button onClick={handleDelete} style={{marginRight: '10px'}}>{t("yes")}</button>
-                        <button onClick={() => setItemIdForDelete(null)}>{t("cancel")}</button>
-                    </div>
-                </div>
+            {itemTypeId && (
+                <ConfirmPopup
+                    message={t("are_you_sure_you_want_to_delete_this_item_type")}
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={() => setItemIdForDelete(null)}
+                />
             )}
         </div>
     );

@@ -18,9 +18,9 @@ const ShowItemById = () => {
 
 
     const formatDate = (producingYear) => {
-        return producingYear[2] + ' / ' + producingYear[1] + ' / ' + producingYear[0];
+        if (!producingYear) return "";
+        return producingYear.slice(0, 10);
     };
-
     useEffect(() => {
         const fetchItem = async () => {
             try {
@@ -51,7 +51,7 @@ const ShowItemById = () => {
             <ul>
                 <li><strong>Id:</strong> {item.id}</li>
                 <li><strong>{t("title")}:</strong> {item.title}</li>
-                <li><strong>{t("price")}:</strong> {item.price}</li>
+                <li><strong>{t("price")}:</strong> ${item.price}</li>
                 <li><strong>{t("quantity")}:</strong> {item.quantity}</li>
                 <li><strong>{t("year")}:</strong> {formatDate(item.producingYear)}</li>
                 <li><strong>{t("manufacturer")}:</strong> {item.manufacturer}</li>

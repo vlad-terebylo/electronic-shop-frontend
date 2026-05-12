@@ -1,28 +1,26 @@
 import React, {useState, useEffect} from "react";
 import publicApiClient from '../../core/PublicApiClient';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {addToCart} from "../cart/CartService";
-import CartPopup from "../cart/CartPopup";
 import AddToCartPopup from "../cart/AddToCartPopup";
 import {useTranslation} from "react-i18next";
-import {useLocale} from "../../core/UseLocales";
+import LanguageSwitcher from "../../core/LanguageSwitcher";
+import LocalizedLink from "../../core/Link";
 
 
 const ShowItemByIdU = () => {
     const {id} = useParams();
-    const navigate = useNavigate();
 
     const [item, setItem] = useState(null);
     const [itemTypeTitle, setItemTypeTitle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [popupItem, setPopupItem] = useState(null);
-    const [popupMessage, setPopupMessage] = useState(null);
     const {t} = useTranslation();
-    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
 
     const formatDate = (producingYear) => {
-        return producingYear[2] + ' / ' + producingYear[1] + ' / ' + producingYear[0];
+        if (!producingYear) return "";
+        return producingYear.slice(0, 10);
     };
 
     useEffect(() => {
@@ -56,8 +54,6 @@ const ShowItemByIdU = () => {
         else if (result === "exceed") alert(`${t("cannot_add_more_than")} ${item.quantity}`);
     };
 
-    const closePopup = () => setPopupMessage(null);
-
     if (loading) return <p>{t("loading")}</p>;
     if (error) return <p>{error}</p>;
     return (
@@ -65,30 +61,22 @@ const ShowItemByIdU = () => {
             <h1>{t("detail")}</h1>
             <ul>
                 <li><strong>{t("title")}:</strong> {item.title}</li>
-                <li><strong>{t("price")}:</strong> {item.price}</li>
-                <li><strong>{t("quantity")}:</strong> {item.quantity}</li>
+                <li><strong>{t("price")}:</strong> ${item.price}</li>
+                <li><strong>{t("availability")}:</strong> {item.quantity > 0 ? t("in_stock") : t("not_in_stock")}</li>
                 <li><strong>{t("year")}:</strong> {formatDate(item.producingYear)}</li>
                 <li><strong>{t("manufacturer")}:</strong> {item.manufacturer}</li>
                 <li><strong>{t("type")}:</strong> {itemTypeTitle}</li>
             </ul>
-            <button onClick={() => navigate(`${prefix}/`)} className="button-group">
-                ← {t("home")}
-            </button>
-            <button onClick={() => handleAddClick(item)} className="button-group">
-                {t("add")}
-            </button>
-
-            <div className="lang-switcher">
-                {SUPPORTED_LOCALES.map((locale) => (
-                    <button
-                        key={locale}
-                        style={{margin: '5px'}}
-                        onClick={() => changeLang(locale)}
-                    >
-                        {locale.toUpperCase()}
-                    </button>
-                ))}
+            <div className="button-group">
+                <LocalizedLink to="/" className="button-group-link">
+                    <button>{t('home')}</button>
+                </LocalizedLink>
+                <button onClick={() => handleAddClick(item)}>
+                    {t("add")}
+                </button>
             </div>
+
+            <LanguageSwitcher/>
 
 
             {popupItem && (
@@ -99,7 +87,6 @@ const ShowItemByIdU = () => {
                 />
             )}
 
-            {popupMessage && <CartPopup message={popupMessage} onClose={closePopup}/>}
         </div>
     );
 };

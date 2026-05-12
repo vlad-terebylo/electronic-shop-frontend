@@ -3,13 +3,14 @@ import {useNavigate} from 'react-router-dom';
 import {getCart, removeFromCart, clearCart, updateCartItemQuantity} from "./CartService";
 import {useTranslation} from "react-i18next";
 import {useLocale} from "../../core/UseLocales";
+import LanguageSwitcher from "../../core/LanguageSwitcher";
 
 const ShowCart = () => {
     const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState(0);
     const [cartItems, setCartItems] = useState([]);
     const {t} = useTranslation();
-    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
+    const {prefix} = useLocale();
 
 
     useEffect(() => {
@@ -106,17 +107,7 @@ const ShowCart = () => {
                 </>
             )}
 
-            <div className="lang-switcher">
-                {SUPPORTED_LOCALES.map((locale) => (
-                    <button
-                        key={locale}
-                        style={{margin: '5px'}}
-                        onClick={() => changeLang(locale)}
-                    >
-                        {locale.toUpperCase()}
-                    </button>
-                ))}
-            </div>
+            <LanguageSwitcher/>
 
             <button onClick={() => navigate(`${prefix}/`)} className="button-group">
                 ← {t("home")}

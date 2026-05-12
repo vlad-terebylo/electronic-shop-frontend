@@ -3,6 +3,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import SearchItemById from "./SearchItemById";
 import SearchItemByTitle from "../../core/SearchItemByTitle";
 import apiClient from '../../core/ApiClient';
+import ConfirmPopup from '../../core/ConfirmPopup';
 import {useTranslation} from "react-i18next";
 import {useLocale} from "../../core/UseLocales";
 
@@ -11,12 +12,11 @@ const ShowAllItems = () => {
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [editingItem, setEditingItem] = useState(null);
-    const [id, setItemId] = useState(null);
+    const [deletedItem, setDeletedItem] = useState(null);
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const {t} = useTranslation();
-    const {SUPPORTED_LOCALES, prefix} = useLocale();
+    const {prefix} = useLocale();
 
     useEffect(() => {
         fetchItems();
@@ -56,26 +56,20 @@ const ShowAllItems = () => {
     };
 
     const handleDelete = async () => {
-        if (id == null) return;
+        if (deletedItem == null) return;
 
         try {
-            await apiClient.delete(`/admin/items/${id}`);
-            setItemId(null);
+            await apiClient.delete(`/admin/items/${deletedItem}`);
+            setDeletedItem(null);
             fetchItems();
         } catch (err) {
             console.error(t("error_deleting_item"), err.response?.data || err.message);
         }
     };
 
-    const handleUpdateSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await apiClient.put(`/admin/items/${editingItem.id}`, editingItem);
-            setEditingItem(null);
-            fetchItems();
-        } catch (err) {
-            console.error(t("error_updating_item"), err);
-        }
+    const handleDeleteConfirm = async () => {
+        await handleDelete(deletedItem);
+        setDeletedItem(null);
     };
 
     if (loading) return <p>{t("loading")}</p>;
@@ -92,7 +86,7 @@ const ShowAllItems = () => {
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
                     <h3>{item.title || item.name}</h3>
                     <p>Id: {item.id}</p>
-                    <p>{t("price")}: {item.price}</p>
+                    <p>{t("price")}: ${item.price}</p>
                     <p>{t("quantity")}: {item.quantity}</p>
                     <p>{t("manufacturer")}: {item.manufacturer}</p>
 
@@ -103,7 +97,7 @@ const ShowAllItems = () => {
                             style={{marginLeft: '5px'}}>
                         {t("update_item")}
                     </button>
-                    <button onClick={() => setItemId(item.id)} style={{marginLeft: '5px'}}>
+                    <button onClick={() => setDeletedItem(item.id)} style={{marginLeft: '5px'}}>
                         {t("remove_item")}
                     </button>
                 </div>
@@ -115,62 +109,12 @@ const ShowAllItems = () => {
                 </button>
             )}
 
-            {editingItem && (
-                <div style={{border: '2px solid blue', padding: '15px', marginTop: '20px'}}>
-                    <h2>{t("update_item")}: {editingItem.title || editingItem.name}</h2>
-                    <form onSubmit={handleUpdateSubmit}>
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            value={editingItem.title}
-                            onChange={(e) => setEditingItem({...editingItem, title: e.target.value})}
-                            required
-                        />
-                        <input
-                            type="number"
-                            placeholder="Price"
-                            value={editingItem.price}
-                            onChange={(e) => setEditingItem({...editingItem, price: parseInt(e.target.value)})}
-                            required
-                        />
-                        <input
-                            type="number"
-                            placeholder="Quantity"
-                            value={editingItem.quantity}
-                            onChange={(e) => setEditingItem({...editingItem, quantity: parseInt(e.target.value)})}
-                            required
-                        />
-                        <button type="submit">Save Changes</button>
-                        <button type="button" onClick={() => setEditingItem(null)} style={{marginLeft: '10px'}}>
-                            {t("cancel")}
-                        </button>
-                    </form>
-                </div>
-            )}
-
-            {id && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <div style={{
-                        background: 'white',
-                        padding: '30px',
-                        borderRadius: '10px',
-                        textAlign: 'center'
-                    }}>
-                        <p>{t("are_you_sure_you_want_to_delete_this_item")}</p>
-                        <button onClick={handleDelete} style={{marginRight: '10px'}}>{t("yes")}</button>
-                        <button onClick={() => setItemId(null)}>{t("cancel")}</button>
-                    </div>
-                </div>
+            {deletedItem && (
+                <ConfirmPopup
+                    message={t("are_you_sure_you_want_to_delete_this_item")}
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={() => setDeletedItem(null)}
+                />
             )}
         </div>
     );

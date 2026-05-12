@@ -54,7 +54,7 @@
   "only_positive_quantity": "Počet musí být více než nula",
   "only_positive_price": "Cena musí být více než nula",
   "select_item_type": "Vyberte typ zboží",
-  "show_all_item_types": "Ukázat všichni typy zboží",
+  "show_all_item_types": "Ukázat všechny typy zboží",
   "show_all_customer_purchases": "Historie nákupů",
   "cannot_exceed_available_stock": "Nemůžeme rozšiřit místo ",
   "save": "Uložit",
@@ -71,5 +71,9 @@
   "failed_to_complete_purchase": "Nepovedlo ukončit nákup",
   "are_you_sure_you_want_to_delete_this_item": "Jste jisti že chcete smazat této zboží?",
   "are_you_sure_you_want_to_delete_this_item_type": "Jste jisti že chcete smazat ténto typ zboží?",
-  "you_must_be_logged_in_to_access_this_page": "Musíte být příhlášení abych mít přístup na tétu stránku"
+  "you_must_be_logged_in_to_access_this_page": "Musíte být příhlášení abych mít přístup na tétu stránku",
+  "in_stock": "Jsou na skladě",
+  "not_in_stock": "Nejsou na skladě",
+  "availability": "Dostupnost"
+
 }

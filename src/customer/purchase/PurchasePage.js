@@ -3,6 +3,14 @@ import {useNavigate} from 'react-router-dom';
 import apiClient from '../../core/ApiClient';
 import {useTranslation} from "react-i18next";
 import {useLocale} from "../../core/UseLocales";
+import SuccessModal from "../../core/SuccessPopup";
+import LanguageSwitcher from "../../core/LanguageSwitcher";
+import LocalizedLink from "../../core/Link";
+
+const formatCardNumber = (value) => {
+    const digits = value.replace(/\D/g, '').substring(0, 16);
+    return digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+};
 
 const PurchasePage = () => {
     const navigate = useNavigate();
@@ -13,7 +21,8 @@ const PurchasePage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const {t} = useTranslation();
-    const {changeLang, SUPPORTED_LOCALES, prefix} = useLocale();
+    const {prefix} = useLocale();
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -58,8 +67,7 @@ const PurchasePage = () => {
             setCartItems([]);
             setTotalPrice(0);
 
-            alert(t("purchase_successful"));
-            navigate(`${prefix}/`);
+            setIsSuccessModalOpen(true);
         } catch (err) {
             console.error(err);
             setError(t("failed_to_complete_purchase"));
@@ -68,28 +76,26 @@ const PurchasePage = () => {
         }
     };
 
+    const handleCardChange = (e) => {
+        const inputVal = e.target.value;
+        const cleanValue = inputVal.replace(/\D/g, '').substring(0, 16);
+        setCardNumber(cleanValue);
+    };
+
     return (
         <div className="container">
             <h1>{t("make_purchase")}</h1>
 
-            <button onClick={() => navigate(`${prefix}/items/cart`)} style={{margin: '5px'}}>
-                {t("cart_btn")}
-            </button>
-            <button onClick={() => navigate(`${prefix}/`)} style={{margin: '5px'}}>
-                {t("home")}
-            </button>
-
-            <div className="lang-switcher">
-                {SUPPORTED_LOCALES.map((locale) => (
-                    <button
-                        key={locale}
-                        style={{margin: '5px'}}
-                        onClick={() => changeLang(locale)}
-                    >
-                        {locale.toUpperCase()}
-                    </button>
-                ))}
+            <div className="button-group">
+                <LocalizedLink to="/items/cart">
+                    <button>{t("cart_btn")}</button>
+                </LocalizedLink>
+                <LocalizedLink to="/">
+                    <button>{t("home")}</button>
+                </LocalizedLink>
             </div>
+
+            <LanguageSwitcher/>
 
             {cartItems.map(item => (
                 <div key={item.id} style={{border: '1px solid gray', padding: '10px', marginBottom: '10px'}}>
@@ -119,8 +125,8 @@ const PurchasePage = () => {
                 <input
                     type="text"
                     placeholder={t("card_number")}
-                    value={cardNumber}
-                    onChange={e => setCardNumber(e.target.value)}
+                    value={formatCardNumber(cardNumber)}
+                    onChange={handleCardChange}
                     style={{marginBottom: '10px', display: 'block'}}
                 />
             </div>
@@ -134,6 +140,14 @@ const PurchasePage = () => {
                     </button>
                 )}
             </div>
+
+            <SuccessModal
+                isOpen={isSuccessModalOpen}
+                onClose={() => {
+                    setIsSuccessModalOpen(false);
+                    navigate(`${prefix}/`);
+                }}
+            />
         </div>
     );
 };

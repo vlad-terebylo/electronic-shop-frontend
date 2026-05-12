@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 const DEFAULT_LOCALE = "en";
 const SUPPORTED_LOCALES = ["en", "cz"];
 
-// получаем префикс для URL
 const getLocalePrefix = (locale) => {
     return locale === DEFAULT_LOCALE ? "" : `/${locale}`;
 };
